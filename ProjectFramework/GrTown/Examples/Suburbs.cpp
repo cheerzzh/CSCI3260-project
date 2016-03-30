@@ -14,6 +14,8 @@
 
 #include "Suburbs.H"
 
+#include <GL/glut.h>
+
 /***********************************************************************/
 // a Really simple tree - just a cone with a stem...
 // use normals to make it look rounder...
@@ -243,6 +245,317 @@ void Church::draw(DrawingState*)
   glPopMatrix();
 }
 
+LutheranChurch::LutheranChurch() : GrObject("LutheranChurch")
+{
+}
+
+void drawLuthChurchTower(GLfloat halfWidth, GLfloat height) {
+	glBegin(GL_TRIANGLE_FAN);
+	glVertex3f(0, height, 0);
+	glVertex3f(-halfWidth, 0, halfWidth);
+	glVertex3f(halfWidth, 0, halfWidth);
+	glVertex3f(-halfWidth, 0, -halfWidth);
+	glVertex3f(-halfWidth, 0, -halfWidth);
+	glVertex3f(halfWidth, 0, halfWidth);
+	glEnd();
+}
+
+void LutheranChurch::draw(DrawingState*)
+{
+	glColor3ub(255,255,255);
+	GLfloat towerHalfWidth =7, towerHeight =70,towerTopHeight = 30;
+	GLfloat bodyHalfWidth = 25, bodyHeight = 20,roofHeight = 15,bodyLen=50;
+
+	//tower
+	glBegin(GL_QUADS);
+		//front
+		glVertex3f(towerHalfWidth, 0, towerHalfWidth);
+		glVertex3f(towerHalfWidth, towerHeight, towerHalfWidth);
+		glVertex3f(-towerHalfWidth, towerHeight, towerHalfWidth);
+		glVertex3f(-towerHalfWidth, 0, towerHalfWidth);
+		//right
+		glVertex3f(towerHalfWidth, 0, towerHalfWidth);
+		glVertex3f(towerHalfWidth, 0, -towerHalfWidth);
+		glVertex3f(towerHalfWidth, towerHeight, -towerHalfWidth);
+		glVertex3f(towerHalfWidth, towerHeight, towerHalfWidth);
+		//back
+		glVertex3f(towerHalfWidth, 0, -towerHalfWidth);
+		glVertex3f(-towerHalfWidth, 0, -towerHalfWidth);
+		glVertex3f(-towerHalfWidth, towerHeight, -towerHalfWidth);
+		glVertex3f(towerHalfWidth, towerHeight, -towerHalfWidth);
+		//left
+		glVertex3f(-towerHalfWidth, 0, towerHalfWidth);
+		glVertex3f(-towerHalfWidth, towerHeight, towerHalfWidth);
+		glVertex3f(-towerHalfWidth, towerHeight, -towerHalfWidth);
+		glVertex3f(-towerHalfWidth, 0, -towerHalfWidth);
+	glEnd();
+	//tower top
+	glPushMatrix();
+		glTranslatef(0, towerHeight, 0);
+		glColor3ub(70,90,90);
+		drawLuthChurchTower(towerHalfWidth *0.7, towerTopHeight);
+		glPushMatrix();
+			glColor3ub(100, 120, 120);
+			glTranslatef(-towerHalfWidth*0.85, 0, towerHalfWidth*0.8);
+			drawLuthChurchTower(towerHalfWidth *0.15, 10);
+			glTranslatef(towerHalfWidth*1.7, 0, 0);
+			drawLuthChurchTower(towerHalfWidth *0.15, 10);
+			glTranslatef(0, 0, -towerHalfWidth*1.7);
+			drawLuthChurchTower(towerHalfWidth *0.15, 10);
+			glTranslatef(-towerHalfWidth*1.7, 0, 0);
+			drawLuthChurchTower(towerHalfWidth *0.15, 10);
+		glPopMatrix();
+	glPopMatrix();
+
+	//body
+	glColor3ub(175,175,175);
+	glTranslatef(0, 0,-towerHalfWidth);
+	//front
+	glBegin(GL_POLYGON);
+		glVertex3f(bodyHalfWidth, 0, 0);
+		glVertex3f(bodyHalfWidth, bodyHeight, 0);
+		glVertex3f(0, bodyHeight+roofHeight, 0);
+		glVertex3f(-bodyHalfWidth, bodyHeight, 0);
+		glVertex3f(-bodyHalfWidth, 0, 0);
+	glEnd();
+	//back
+	glBegin(GL_POLYGON);
+		glVertex3f(bodyHalfWidth, 0, -bodyLen);
+		glVertex3f(-bodyHalfWidth, 0, -bodyLen);
+		glVertex3f(-bodyHalfWidth, bodyHeight, -bodyLen);
+		glVertex3f(0, bodyHeight + roofHeight, -bodyLen);
+		glVertex3f(bodyHalfWidth, bodyHeight, -bodyLen);		
+	glEnd();
+	
+	glBegin(GL_QUADS);
+		//left
+		glVertex3f(-bodyHalfWidth, 0, 0);
+		glVertex3f(-bodyHalfWidth, bodyHeight, 0);
+		glVertex3f(-bodyHalfWidth, bodyHeight, -bodyLen);
+		glVertex3f(-bodyHalfWidth, 0, -bodyLen);
+		//right
+		glVertex3f(bodyHalfWidth, 0, 0);
+		glVertex3f(bodyHalfWidth, 0, -bodyLen);
+		glVertex3f(bodyHalfWidth, bodyHeight, -bodyLen);
+		glVertex3f(bodyHalfWidth, bodyHeight, 0);
+		//roof1
+		glColor3ub(200, 90, 60);
+		glVertex3f(-bodyHalfWidth, bodyHeight, 0);
+		glVertex3f(0, bodyHeight+roofHeight, 0);
+		glVertex3f(0, bodyHeight + roofHeight, -bodyLen);
+		glVertex3f(-bodyHalfWidth, bodyHeight, -bodyLen);
+		//roof2
+		glVertex3f(bodyHalfWidth, bodyHeight, 0);
+		glVertex3f(bodyHalfWidth, bodyHeight, -bodyLen);
+		glVertex3f(0, bodyHeight + roofHeight, -bodyLen);
+		glVertex3f(0, bodyHeight + roofHeight, 0);		
+	glEnd();
+}
+
+OrthodoxyChurch::OrthodoxyChurch() : GrObject("OrthodoxyChurch")
+{
+}
+
+void drawOrthoChurchPole(GLfloat height) {
+	glColor3ub(255, 255, 255);
+	GLfloat poleHalfWidth = 1.5;
+	glBegin(GL_QUADS);
+		//front
+		glVertex3f(poleHalfWidth, 0, poleHalfWidth);
+		glVertex3f(poleHalfWidth, height, poleHalfWidth);
+		glVertex3f(-poleHalfWidth, height, poleHalfWidth);
+		glVertex3f(-poleHalfWidth, 0, poleHalfWidth);
+		//right
+		glVertex3f(poleHalfWidth, 0, poleHalfWidth);
+		glVertex3f(poleHalfWidth, 0, -poleHalfWidth);
+		glVertex3f(poleHalfWidth, height, -poleHalfWidth);
+		glVertex3f(poleHalfWidth, height, poleHalfWidth);
+		//back
+		glVertex3f(poleHalfWidth, 0, -poleHalfWidth);
+		glVertex3f(-poleHalfWidth, 0, -poleHalfWidth);
+		glVertex3f(-poleHalfWidth, height, -poleHalfWidth);
+		glVertex3f(poleHalfWidth, height, -poleHalfWidth);
+		//left
+		glVertex3f(-poleHalfWidth, 0, poleHalfWidth);
+		glVertex3f(-poleHalfWidth, height, poleHalfWidth);
+		glVertex3f(-poleHalfWidth, height, -poleHalfWidth);
+		glVertex3f(-poleHalfWidth, 0, -poleHalfWidth);
+		//top
+		glColor3ub(70, 70, 70);
+		glVertex3f(poleHalfWidth, height, poleHalfWidth);
+		glVertex3f(poleHalfWidth,height, -poleHalfWidth);
+		glVertex3f(-poleHalfWidth, height, -poleHalfWidth);
+		glVertex3f(-poleHalfWidth, height, poleHalfWidth);
+	glEnd();
+}
+
+void drawOrthoChurchTower(GLfloat radius, GLfloat height) {
+	GLUquadricObj *obj = gluNewQuadric();
+	glPushMatrix();
+		//pole
+		glColor3ub(200, 90, 60);
+		glRotatef(-90, 1, 0, 0);
+		gluCylinder(obj, radius, radius, height, 20, 10);
+		//middle
+		glColor3ub(255, 255, 255);
+		glTranslatef(0, 0, height);
+		gluCylinder(obj, radius*1.1, radius*1.1, 2, 20, 10);
+		//dome
+		glColor3ub(70, 70, 70);
+		glTranslatef(0, 0, 3);
+		gluSphere(obj, radius, 20, 20);
+		glTranslatef(0, 0, radius-1);
+		gluCylinder(obj, radius*0.5, 0, 8, 20, 10);
+		//cross
+		glColor3ub(250, 220, 110);
+		glTranslatef(0, 0, 9);
+		glPushMatrix();
+			glRotatef(90, 0, 0, 1);
+			glScalef(1, 6, 1);
+			glutSolidCube(0.5);
+		glPopMatrix();
+		glRotatef(90, 1, 0, 0);
+		glScalef(1, 8, 1);
+		glutSolidCube(0.5);
+	glPopMatrix();
+}
+
+void OrthodoxyChurch::draw(DrawingState*)
+{
+	glColor3ub(200, 90, 60);
+	GLfloat outerHalfWidth = 25, outerHeight = 18, innerHalfWidth = 17, innerHeight = 13,poleHalfWidth=1.5;
+	//outer
+	glTranslatef(0, 0, -outerHalfWidth);
+	glBegin(GL_QUADS);
+		//front
+		glVertex3f(outerHalfWidth, 0, outerHalfWidth);
+		glVertex3f(outerHalfWidth, outerHeight, outerHalfWidth);
+		glVertex3f(-outerHalfWidth, outerHeight, outerHalfWidth);
+		glVertex3f(-outerHalfWidth, 0, outerHalfWidth);
+		//right
+		glVertex3f(outerHalfWidth, 0, outerHalfWidth);
+		glVertex3f(outerHalfWidth, 0, -outerHalfWidth);
+		glVertex3f(outerHalfWidth, outerHeight, -outerHalfWidth);
+		glVertex3f(outerHalfWidth, outerHeight, outerHalfWidth);
+		//back
+		glVertex3f(outerHalfWidth, 0, -outerHalfWidth);
+		glVertex3f(-outerHalfWidth, 0, -outerHalfWidth);
+		glVertex3f(-outerHalfWidth, outerHeight, -outerHalfWidth);
+		glVertex3f(outerHalfWidth, outerHeight, -outerHalfWidth);
+		//left
+		glVertex3f(-outerHalfWidth, 0, outerHalfWidth);
+		glVertex3f(-outerHalfWidth, outerHeight, outerHalfWidth);
+		glVertex3f(-outerHalfWidth, outerHeight, -outerHalfWidth);
+		glVertex3f(-outerHalfWidth, 0, -outerHalfWidth);
+		//top
+		glColor3ub(70, 70, 70);
+		glVertex3f(outerHalfWidth, outerHeight, outerHalfWidth);
+		glVertex3f(outerHalfWidth, outerHeight, -outerHalfWidth);
+		glVertex3f(-outerHalfWidth, outerHeight, -outerHalfWidth);
+		glVertex3f(-outerHalfWidth, outerHeight, outerHalfWidth);
+	glEnd();
+	glPushMatrix();
+		glTranslatef(-outerHalfWidth, 0, outerHalfWidth);
+		drawOrthoChurchPole(outerHeight);
+		glTranslatef(outerHalfWidth*2, 0,0);
+		drawOrthoChurchPole(outerHeight);
+		glTranslatef(0, 0, -2 * outerHalfWidth);
+		drawOrthoChurchPole(outerHeight);
+		glTranslatef(-2*outerHalfWidth, 0,0);
+		drawOrthoChurchPole(outerHeight);
+	glPopMatrix();
+	glPushMatrix();
+		glTranslatef(-outerHalfWidth*0.3, 0, outerHalfWidth + poleHalfWidth);
+		drawOrthoChurchPole(outerHeight);
+		glTranslatef(outerHalfWidth*0.6, 0, 0);
+		drawOrthoChurchPole(outerHeight);
+	glPopMatrix();
+	//inner
+	glTranslatef(0, outerHeight, 0);
+	glColor3ub(200, 90, 60);
+	glBegin(GL_QUADS);
+		//front
+		glVertex3f(innerHalfWidth, 0, innerHalfWidth);
+		glVertex3f(innerHalfWidth, innerHeight, innerHalfWidth);
+		glVertex3f(-innerHalfWidth, innerHeight, innerHalfWidth);
+		glVertex3f(-innerHalfWidth, 0, innerHalfWidth);
+		//right
+		glVertex3f(innerHalfWidth, 0, innerHalfWidth);
+		glVertex3f(innerHalfWidth, 0, -innerHalfWidth);
+		glVertex3f(innerHalfWidth, innerHeight, -innerHalfWidth);
+		glVertex3f(innerHalfWidth, innerHeight, innerHalfWidth);
+		//back
+		glVertex3f(innerHalfWidth, 0, -innerHalfWidth);
+		glVertex3f(-innerHalfWidth, 0, -innerHalfWidth);
+		glVertex3f(-innerHalfWidth, innerHeight, -innerHalfWidth);
+		glVertex3f(innerHalfWidth, innerHeight, -innerHalfWidth);
+		//left
+		glVertex3f(-innerHalfWidth, 0, innerHalfWidth);
+		glVertex3f(-innerHalfWidth, innerHeight, innerHalfWidth);
+		glVertex3f(-innerHalfWidth, innerHeight, -innerHalfWidth);
+		glVertex3f(-innerHalfWidth, 0, -innerHalfWidth);
+		//top
+		glColor3ub(70, 70, 70);
+		glVertex3f(innerHalfWidth, innerHeight, innerHalfWidth);
+		glVertex3f(innerHalfWidth, innerHeight, -innerHalfWidth);
+		glVertex3f(-innerHalfWidth, innerHeight, -innerHalfWidth);
+		glVertex3f(-innerHalfWidth, innerHeight, innerHalfWidth);
+	glEnd();
+	glPushMatrix();
+		glTranslatef(-innerHalfWidth, 0, innerHalfWidth);
+		drawOrthoChurchPole(innerHeight);
+		glTranslatef(innerHalfWidth * 2, 0, 0);
+		drawOrthoChurchPole(innerHeight);
+		glTranslatef(0, 0, -2 * innerHalfWidth);
+		drawOrthoChurchPole(innerHeight);
+		glTranslatef(-2 * innerHalfWidth, 0, 0);
+		drawOrthoChurchPole(innerHeight);
+	glPopMatrix();
+	glPushMatrix();
+		glTranslatef(-innerHalfWidth*0.3, 0, innerHalfWidth+poleHalfWidth);
+		drawOrthoChurchPole(innerHeight);
+		glTranslatef(innerHalfWidth*0.6, 0, 0);
+		drawOrthoChurchPole(innerHeight);
+	glPopMatrix();
+	//tower
+	glTranslatef(0, innerHeight, 0);
+	drawOrthoChurchTower(innerHalfWidth*0.4, 20);
+	glTranslatef(-innerHalfWidth*0.7, 0, innerHalfWidth*0.7);
+	drawOrthoChurchTower(innerHalfWidth*0.25, 12);
+	glTranslatef(innerHalfWidth*1.4, 0, 0);
+	drawOrthoChurchTower(innerHalfWidth*0.25, 12);
+	glTranslatef(0, 0, -innerHalfWidth*1.4);
+	drawOrthoChurchTower(innerHalfWidth*0.25, 12);
+	glTranslatef(-innerHalfWidth*1.4, 0, 0);
+	drawOrthoChurchTower(innerHalfWidth*0.25, 12);
+}
+
+CityGate::CityGate() : GrObject("CityGate")
+{
+}
+
+void drawGityGateSingle()
+{
+	glPushMatrix();
+		glRotatef(-90, 1, 0, 0);
+		GLUquadricObj *obj = gluNewQuadric();
+		GLfloat towerHeight=30, towerTopHeight=10, towerRadius=5;
+
+		glColor3ub(175, 175, 175);
+		gluCylinder(obj, towerRadius, towerRadius, towerHeight, 20, 10);
+
+		glColor3ub(200, 90, 60);
+		glTranslatef(0, 0, towerHeight);
+		gluCylinder(obj, towerRadius+0.5, 0, towerTopHeight, 20, 10);
+	glPopMatrix();
+}
+void CityGate::draw(DrawingState*)
+{
+	glTranslatef(-13, 0, 0);
+	drawGityGateSingle();
+	glTranslatef(26, 0, 0);
+	drawGityGateSingle();
+}
 /*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*/
 StreetLight::StreetLight(double p) : poleZ(p)
 {

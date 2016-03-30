@@ -49,11 +49,33 @@ int main(int /*argc*/, char** /*argv*/)
 
 
   // add some more stuff
-  GrObject* o1 = new Church;
-  o1->interesting = true;
-  o1->laX = 0; o1->laY = 0; o1->laZ = 0;
-  o1->lfX = -50; o1->lfY = 100; o1->lfZ = 300;
-  add(o1,-100,0,100,pi/2.f);
+  //GrObject* o1 = new Church;
+  //o1->interesting = true;
+  //o1->laX = 0; o1->laY = 0; o1->laZ = 0;
+  //o1->lfX = -50; o1->lfY = 100; o1->lfZ = 300;
+  //add(o1,-100,0,100,pi/2.f);
+
+  GrObject* church1 = new LutheranChurch;
+  church1->interesting = true;
+  church1->name = "St.Olav Church";
+  church1->laX = 0; church1->laY = 0; church1->laZ = 0;
+  church1->lfX = -50; church1->lfY = 100; church1->lfZ = 300;
+  add(church1, -100, 0, 100, 0);
+
+  GrObject* church2 = new OrthodoxyChurch;
+  church2->interesting = true;
+  church2->name = "Alexander Nevsky Church";
+  church2->laX = 0; church2->laY = 0; church2->laZ = 0;
+  church2->lfX = -50; church2->lfY = 100; church2->lfZ = 300;
+  add(church2, -100, 0, 250, 0);
+
+  GrObject* gate = new CityGate;
+  gate->interesting = true;
+  gate->name = "Viru Gate";
+  gate->laX = 0; gate->laY = 0; gate->laZ = 0;
+  gate->lfX = -50; gate->lfY = 100; gate->lfZ = 300;
+  add(gate, -100, 0, 350, 0);
+
 
 
   // *****************************************************************
@@ -87,9 +109,7 @@ int main(int /*argc*/, char** /*argv*/)
   GrObject* cube4 = new Cube(1,7.5,0, 2, 1,0,1);
   cube3->add(cube4);
 
-
-
-  ////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////
   // now to make a real town!
   int r,c;
   // make a 5x5 grid of town blocks - 5 houses per
@@ -184,6 +204,7 @@ int main(int /*argc*/, char** /*argv*/)
   grTown.window->show();
 
   Fl::run();
-  return 1;
+
+   return 1;
 }
 

@@ -62,6 +62,24 @@ public:
   virtual void draw(DrawingState*);
 };
 
+class LutheranChurch : public GrObject {
+public:
+	LutheranChurch();
+	virtual void draw(DrawingState*);
+};
+
+class OrthodoxyChurch : public GrObject {
+public:
+	OrthodoxyChurch();
+	virtual void draw(DrawingState*);
+};
+
+class CityGate : public GrObject {
+public:
+	CityGate();
+	virtual void draw(DrawingState*);
+};
+
 //**********************************************************************
 // a street light - what is interesting about this is that it draws a
 // transparent cone to fake a spotlight as its drawafter
