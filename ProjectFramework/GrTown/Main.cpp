@@ -47,14 +47,14 @@ int main(int /*argc*/, char** /*argv*/)
 	shaderPaths.push_back("Shaders");
 	shaderPaths.push_back("../Shaders");
 
-/*
+
   // add some more stuff
   GrObject* o1 = new Church;
   o1->interesting = true;
   o1->laX = 0; o1->laY = 0; o1->laZ = 0;
   o1->lfX = -50; o1->lfY = 100; o1->lfZ = 300;
   add(o1,-100,0,100,pi/2.f);
-*/
+
 
   // *****************************************************************
   //  Make your town here
@@ -84,8 +84,9 @@ int main(int /*argc*/, char** /*argv*/)
   GrObject* cube3 = new Cube(-50,5,-75,10,   .7f, .3f, .6f);
   add(cube3);
   new Spin(cube3,.001f);
-  GrObject* cube4 = new Cube(0,7.5,0, 5, 1,0,1);
+  GrObject* cube4 = new Cube(1,7.5,0, 2, 1,0,1);
   cube3->add(cube4);
+
 
 
   ////////////////////////////////////////////////////////////////////////
@@ -149,7 +150,7 @@ int main(int /*argc*/, char** /*argv*/)
 // The following code added a round race track, 
 //  you're required to replace it with an elliptical race track and put two cars running on it.
 
-/*
+
 	// a race track
     Road* t = new RoundRoad(-250,250,100);
 	add(t);
@@ -167,7 +168,7 @@ int main(int /*argc*/, char** /*argv*/)
 	add(h);
 	Drive* d = new SimpleDrive(h,t,0,1);
 	d->speed *= 2;
-*/
+
 
   // *****************************************************************
   // now make a UI
