@@ -59,22 +59,22 @@ int main(int /*argc*/, char** /*argv*/)
   church1->interesting = true;
   church1->name = "St.Olav Church";
   church1->laX = 0; church1->laY = 0; church1->laZ = 0;
-  church1->lfX = -50; church1->lfY = 100; church1->lfZ = 300;
-  add(church1, -100, 0, 100, 0);
-
+  church1->lfX = -50; church1->lfY = 100; church1->lfZ = 250;
+  add(church1, -50, 0, 100, pi / 2.f);
+  
   GrObject* church2 = new OrthodoxyChurch;
   church2->interesting = true;
   church2->name = "Alexander Nevsky Church";
   church2->laX = 0; church2->laY = 0; church2->laZ = 0;
-  church2->lfX = -50; church2->lfY = 100; church2->lfZ = 300;
-  add(church2, -100, 0, 250, 0);
+  church2->lfX = -50; church2->lfY = 100; church2->lfZ = 250;
+  add(church2, -50, 0, 200, pi / 2.f);
 
   GrObject* gate = new CityGate;
   gate->interesting = true;
   gate->name = "Viru Gate";
   gate->laX = 0; gate->laY = 0; gate->laZ = 0;
   gate->lfX = -50; gate->lfY = 100; gate->lfZ = 300;
-  add(gate, -100, 0, 350, 0);
+  add(gate, -16, 0, 400, 0);
 
 
 
