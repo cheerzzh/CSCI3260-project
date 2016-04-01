@@ -62,7 +62,7 @@ int main(int /*argc*/, char** /*argv*/)
   church1->lfX = -50; church1->lfY = 100; church1->lfZ = 250;
   add(church1, -50, 0, 100, pi / 2.f);
   
-  GrObject* church2 = new OrthodoxyChurch;
+  GrObject* church2 = new OrthodoxChurch;
   church2->interesting = true;
   church2->name = "Alexander Nevsky Church";
   church2->laX = 0; church2->laY = 0; church2->laZ = 0;
@@ -89,6 +89,13 @@ int main(int /*argc*/, char** /*argv*/)
   market->laX = 0; market->laY = 0; market->laZ = 0;
   market->lfX = -50; market->lfY = 100; market->lfZ = 300;
   add(market, -50, 0, 450, pi / 2.f);
+
+  GrObject* townhall = new TownHall;
+  townhall->name = "Town Hall";
+  townhall->interesting = true;
+  townhall->laX = 0; townhall->laY = 0; townhall->laZ = 0;
+  townhall->lfX = -50; townhall->lfY = 100; townhall->lfZ = 300;
+  add(townhall, -50, 0, 620, pi / 2.f);
 
   // *****************************************************************
   //  Make your town here
@@ -216,7 +223,6 @@ int main(int /*argc*/, char** /*argv*/)
   grTown.window->show();
 
   Fl::run();
-  glEnable(GL_COLOR_MATERIAL);
-   return 1;
+  return 1;
 }
 

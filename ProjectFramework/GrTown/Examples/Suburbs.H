@@ -54,14 +54,6 @@ public:
 };
 
 //
-// a sortof a church: a bigger house with a steeple
-class Church : public GrObject {
-public:
-  Church();
-  Color color;
-  virtual void draw(DrawingState*);
-};
-
 class TownHall : public GrObject {
 public:
 	TownHall();
@@ -74,9 +66,9 @@ public:
 	virtual void draw(DrawingState*);
 };
 
-class OrthodoxyChurch : public GrObject {
+class OrthodoxChurch : public GrObject {
 public:
-	OrthodoxyChurch();
+	OrthodoxChurch();
 	virtual void draw(DrawingState*);
 };
 class CityGate : public GrObject {
