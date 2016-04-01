@@ -245,6 +245,14 @@ void Church::draw(DrawingState*)
   glPopMatrix();
 }
 
+TownHall::TownHall() : GrObject("Town Hall")
+{
+}
+void TownHall::draw(DrawingState*)
+{
+	
+}
+
 LutheranChurch::LutheranChurch() : GrObject("LutheranChurch")
 {
 }
@@ -403,7 +411,7 @@ void drawOrthoChurchPole(GLfloat poleHalfWidth, GLfloat height) {
 }
 
 void drawOrthoChurchTower(GLfloat radius, GLfloat height) {
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	fetchTexture("orthodoxy-church-tower.bmp");
 	GLUquadricObj *obj = gluNewQuadric();
 	gluQuadricTexture(obj, true);
@@ -572,7 +580,7 @@ void OrthodoxyChurch::draw(DrawingState*)
 	drawOrthoChurchTower(innerHalfWidth*0.25, 12);
 }
 
-CityGate::CityGate() : GrObject("CityGate")
+CityGate::CityGate() : GrObject("City Gate")
 {
 }
 
@@ -597,6 +605,156 @@ void CityGate::draw(DrawingState*)
 	drawGityGateSingle();
 	glTranslatef(26, 0, 0);
 	drawGityGateSingle();
+}
+
+TVTower::TVTower() : GrObject("TV Tower")
+{
+}
+
+void TVTower::draw(DrawingState*)
+{
+	GLfloat baseHeight = 3, towerHeight = 90, middleHeight = 5, aerialHeight = 50, baseRadius = 25, towerRadius = 6, middleRadius = 12, aerialRadius = 2, aerialSectionCount = 10;
+	//base
+	GLUquadricObj *obj = gluNewQuadric();
+	glColor3ub(180, 180, 180);
+	glRotatef(-90, 1, 0, 0);
+	gluCylinder(obj, baseRadius, baseRadius, baseHeight, 20, 10);
+	glTranslatef(0, 0, baseHeight);
+	gluDisk(obj, 0, baseRadius, 20, 10);
+	//tower
+	gluCylinder(obj, towerRadius, towerRadius*0.5, towerHeight, 20, 10);
+	//middle
+	glTranslatef(0, 0, towerHeight);
+	gluCylinder(obj, middleRadius*0.9, middleRadius, middleHeight, 20, 10);
+	glTranslatef(0, 0, middleHeight);
+	gluDisk(obj, 0, middleRadius, 20, 10);
+	//aerial
+	glColor3ub(255, 0, 0);
+	gluCylinder(obj, middleRadius*0.5, middleRadius*0.4, 6, 20, 10);
+	glTranslatef(0, 0, 6);
+	gluDisk(obj,0, middleRadius*0.4,20, 10);
+
+	GLfloat aerialSectionHeight = aerialHeight / aerialSectionCount;
+	for (int i = 0; i < aerialSectionCount; i++) {
+		if (i % 2 == 0) glColor3ub(255, 255, 255); else glColor3ub(255, 0, 0);
+		GLfloat radius1 = (aerialSectionCount - i) / aerialSectionCount*aerialRadius;
+		GLfloat radius2 = (aerialSectionCount - i - 1) / aerialSectionCount*aerialRadius;
+		gluCylinder(obj, radius1, radius2, aerialSectionHeight, 20, 10);
+		glTranslatef(0, 0, aerialSectionHeight);
+	}
+}
+
+IndoorMarket::IndoorMarket() : GrObject("Indoor Market")
+{
+}
+
+void drawMarketRoom(GLfloat halfWidth, GLfloat height, GLfloat length, GLfloat roofHeight)
+{
+	glPushMatrix();
+	glColor3ub(200, 175, 150);
+	//walls
+	fetchTexture("market-front.bmp");
+	glBegin(GL_QUADS);
+		//front
+		glTexCoord2f(1, 0); glVertex3f(halfWidth, 0, 0);
+		glTexCoord2f(1, 1); glVertex3f(halfWidth, height, 0);
+		glTexCoord2f(0, 1); glVertex3f(-halfWidth, height, 0);
+		glTexCoord2f(0, 0); glVertex3f(-halfWidth, 0, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		//right
+		glVertex3f(halfWidth, 0, 0);
+		glVertex3f(halfWidth, 0, -length);
+		glVertex3f(halfWidth, height, -length);
+		glVertex3f(halfWidth, height, 0);
+		//back
+		glVertex3f(halfWidth, 0, -length);
+		glVertex3f(-halfWidth, 0, -length);
+		glVertex3f(-halfWidth, height, -length);
+		glVertex3f(halfWidth, height, -length);
+		//left
+		glVertex3f(-halfWidth, 0, 0);
+		glVertex3f(-halfWidth, height, 0);
+		glVertex3f(-halfWidth, height, -length);
+		glVertex3f(-halfWidth, 0, -length);
+	glEnd();
+	//poles
+	glPushMatrix();
+		glTranslatef(-halfWidth+0.2,0, 0.2);
+		glBegin(GL_QUADS);
+			//front
+			glVertex3f(halfWidth*0.05, 0, halfWidth*0.05);
+			glVertex3f(halfWidth*0.05, height, halfWidth*0.05);
+			glVertex3f(-halfWidth*0.05, height, halfWidth*0.05);
+			glVertex3f(-halfWidth*0.05, 0, halfWidth*0.05);
+			//right
+			glVertex3f(halfWidth*0.05, 0, halfWidth*0.05);
+			glVertex3f(halfWidth*0.05, 0, -halfWidth*0.05);
+			glVertex3f(halfWidth*0.05, height, -halfWidth*0.05);
+			glVertex3f(halfWidth*0.05, height, halfWidth*0.05);
+			//back
+			glVertex3f(halfWidth*0.05, 0, -halfWidth*0.05);
+			glVertex3f(-halfWidth*0.05, 0, -halfWidth*0.05);
+			glVertex3f(-halfWidth*0.05, height, -halfWidth*0.05);
+			glVertex3f(halfWidth*0.05, height, -halfWidth*0.05);
+			//left
+			glVertex3f(-halfWidth*0.05, 0, 0);
+			glVertex3f(-halfWidth*0.05, height, 0);
+			glVertex3f(-halfWidth*0.05, height, -halfWidth*0.05);
+			glVertex3f(-halfWidth*0.05, 0, -halfWidth*0.05);
+		glEnd();
+	glPopMatrix();
+	glTranslatef(0, height, 0);
+	//curved roof
+	for (int i = 0; i < 6; i++) {
+		float theta1 = i / 6.0 * pi;
+		float theta2 = (i + 1) / 6.0 * pi;
+		glColor3ub(200, 175, 150);
+		glBegin(GL_TRIANGLES);
+			glVertex3f(0, 0, 0);
+			glVertex3f(halfWidth*cos(theta1), roofHeight*sin(theta1), 0);
+			glVertex3f(halfWidth*cos(theta2), roofHeight*sin(theta2), 0);
+		glEnd();
+		glFrontFace(GL_CW);
+		glBegin(GL_TRIANGLES);
+			glVertex3f(0, 0, -length);
+			glVertex3f(halfWidth*cos(theta1), roofHeight*sin(theta1), -length);
+			glVertex3f(halfWidth*cos(theta2), roofHeight*sin(theta2), -length);
+		glEnd();
+		glFrontFace(GL_CCW);
+		glBegin(GL_QUADS);
+			glVertex3f(halfWidth*cos(theta1), roofHeight*sin(theta1)*0.95, 0);
+			glVertex3f(halfWidth*cos(theta1), roofHeight*sin(theta1)*0.95, -1.5);
+			glVertex3f(halfWidth*cos(theta2), roofHeight*sin(theta2)*0.95, -1.5);
+			glVertex3f(halfWidth*cos(theta2), roofHeight*sin(theta2)*0.95, 0);
+
+			glVertex3f(halfWidth*cos(theta1), roofHeight*sin(theta1)*0.95, -length + 1.5);
+			glVertex3f(halfWidth*cos(theta1), roofHeight*sin(theta1)*0.95, -length);
+			glVertex3f(halfWidth*cos(theta2), roofHeight*sin(theta2)*0.95, -length );
+			glVertex3f(halfWidth*cos(theta2), roofHeight*sin(theta2)*0.95, -length + 1.5);
+		glEnd();
+
+		glColor3ub(81, 100, 110);
+		glBegin(GL_QUADS);
+			glVertex3f(halfWidth*cos(theta1)*0.95, roofHeight*sin(theta1)*0.95, 0);
+			glVertex3f(halfWidth*cos(theta1)*0.95, roofHeight*sin(theta1)*0.95, -length);
+			glVertex3f(halfWidth*cos(theta2)*0.95, roofHeight*sin(theta2)*0.95, -length);
+			glVertex3f(halfWidth*cos(theta2)*0.95, roofHeight*sin(theta2)*0.95, 0);
+		glEnd();	
+
+	}
+	glPopMatrix();
+
+}
+
+void IndoorMarket::draw(DrawingState*)
+{
+	GLfloat roomWidth = 40, roomHeight = 15, roomLength = 50, roofHeight = 17;
+	drawMarketRoom(roomWidth/2,roomHeight,roomLength,roofHeight);
+	glTranslatef(-1 * roomWidth, 0, 0);
+	drawMarketRoom(roomWidth / 2, roomHeight, roomLength, roofHeight);
+	glTranslatef(2 * roomWidth, 0, 0);
+	drawMarketRoom(roomWidth / 2, roomHeight, roomLength, roofHeight);
+
 }
 /*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*/
 StreetLight::StreetLight(double p) : poleZ(p)

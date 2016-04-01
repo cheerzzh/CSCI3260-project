@@ -76,7 +76,19 @@ int main(int /*argc*/, char** /*argv*/)
   gate->lfX = -50; gate->lfY = 100; gate->lfZ = 300;
   add(gate, -16, 0, 400, 0);
 
+  GrObject* tvtower = new TVTower;
+  tvtower->name = "TV Tower";
+  tvtower->interesting = true;
+  tvtower->laX = 0; tvtower->laY = 0; tvtower->laZ = 0;
+  tvtower->lfX = -50; tvtower->lfY = 100; tvtower->lfZ = 300;
+  add(tvtower, -100, 0, 300, pi / 2.f);
 
+  GrObject* market = new IndoorMarket;
+  market->name = "Central Market";
+  market->interesting = true;
+  market->laX = 0; market->laY = 0; market->laZ = 0;
+  market->lfX = -50; market->lfY = 100; market->lfZ = 300;
+  add(market, -50, 0, 450, pi / 2.f);
 
   // *****************************************************************
   //  Make your town here
@@ -204,7 +216,7 @@ int main(int /*argc*/, char** /*argv*/)
   grTown.window->show();
 
   Fl::run();
-
+  glEnable(GL_COLOR_MATERIAL);
    return 1;
 }
 
