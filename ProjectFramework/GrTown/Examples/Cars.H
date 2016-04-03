@@ -48,5 +48,9 @@ public:
   Van(int color);
 };
 
-
+class ComplexCar : public GrObject{
+	
+public:
+	ComplexCar(char* type);
+};
 

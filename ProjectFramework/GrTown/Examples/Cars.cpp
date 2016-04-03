@@ -65,16 +65,48 @@ static void drawWheel(float r, float w)
 	int i=0;
 	glNormal3f(1,0,0);
 	glBegin(GL_POLYGON);
-	for(i=7; i>=0; i--)
+	//fetchTexture("wheel_side_texture.bmp");
+	for (i = 7; i >= 0; i--)
+		//glTexCoord2f(0, 1);
 		glVertex3f(w,wc[i][0]*r,wc[i][1]*r);
 	glEnd();
+	//fetchTexture("wheel_texture.bmp");
 	glBegin(GL_QUAD_STRIP);
 	for(i=0; i<9; i++) {
+		//glTexCoord2f(wc[i][0] * r, wc[i][1] * r);
 		glVertex3f(0,wc[i][0]*r,wc[i][1]*r);
 		glVertex3f(w,wc[i][0]*r,wc[i][1]*r);
 	}
 	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
 
+}
+
+static void drawWheel1(float radius, float width)
+{
+	glPushMatrix();
+	GLUquadric *qobj = gluNewQuadric();
+	// Car wheels
+	for (int i = -1; i <= 1; i += 2) {
+		for (int j = -1; j <= 1; j += 2) {
+			glPushMatrix();
+			glTranslatef(i * 0.8, 0.3, j * 1);
+			glRotatef(90 * i, 0, 1, 0);
+			//if (j < 0) glRotatef(turnIndex * 20, 0, 1, 0);
+			//glRotatef(i * wheelAngle, 0, 0, 1);
+			fetchTexture("wheel_side_texture.bmp");
+			//glBindTexture(GL_TEXTURE_2D, wheelSideTexture);
+			gluCylinder(qobj, radius, radius, 0.3, 50, 20);
+			glTranslatef(0, 0, 0.3);
+			fetchTexture("wheel_texture.bmp");
+			//glBindTexture(GL_TEXTURE_2D, wheelTexture);
+			gluDisk(qobj, 0, radius, 50, 20);
+			glPopMatrix();
+		}
+	}
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glPopMatrix();
 }
 
 void Car::draw(DrawingState* d)
@@ -163,17 +195,53 @@ void Car::drawAfter(DrawingState* s)
 
 void Car::drawBody(DrawingState*)
 {
-
+	/*
 	polygon(-4, -w,h,0., -w,h+t,0., w,h+t,0., w,h,0.);
 	polygon(4, -w,h,r+f, -w,h+t,r+f, w,h+t,r+f, w,h,r+f);
 	polygon(-4, w,t+h,0., -w,t+h,0., -w,t+h,f+r, w,t+h,f+r);
 	polygon(4, w,h,0., -w,h,0., -w,h,f+r, w,h,f+r);
     polygon(-4, w,t+h,0., w,t+h,f+r, w,h,f+r, w,h,0.);
 	polygon(4, -w,t+h,0., -w,t+h,f+r, -w,h,f+r, -w,h,0.);
-
+	*/
 	//=============================================================
 	// Now the cars are simply boxes with different hights. 
     // TODO2: To make the cars look more realistic and add texutres. 
+	// front
+	polygon(-4, -w, h, 0., -w, h + m - a, 0., w, h + m - a, 0., w, h, 0.);
+	// hood
+	polygon(-4, -w, h + m - a, 0., -w, h + m, f, w, h + m, f, w, h + m - a, 0.);
+	// fenders
+	polygon(-4, -w, h, 0., -w, h, f, -w, h + m, f, -w, h + m - a, 0.); 
+	polygon(4, w, h, 0., w, h, f, w, h + m, f, w, h + m - a, 0.);
+
+	// top
+	polygon(-4, -w + sr, t + h, f, -w + sr, t + h, f + r - br, w - sr, t + h, f + r - br, w - sr, t + h, f);
+	if (!sideTexture)
+		sideTexture = fetchTexture("suv-side.png"); // fetch does the bind
+	else sideTexture->bind();
+	// left side (x-), right side (x+), bottoms
+	polygon(-4, -w, h + m, f - s, -w, h + m, f + r, -w + sr, t + h, f + r - br, -w + sr, t + h, f);
+	polygon(4, w, h + m, f - s, w, h + m, f + r, w - sr, t + h, f + r - br, w - sr, t + h, f);// right buttom
+
+	// left side (x-), right side (x+), tops
+	
+	glBindTexture(GL_TEXTURE_2D, 0);
+	polygon(-4, -w, h, f, -w, h, f + r, -w, m + h, f + r, -w, m + h, f);
+	polygon(4, w, h, f, w, h, f + r, w, m + h, f + r, w, m + h, f);
+
+	// Bind texture
+	
+	if (!frontTexture)
+		frontTexture = fetchTexture("suv-front.png"); // fetch does the bind
+	else frontTexture->bind();
+	
+	polygon(-4, -w, h + m, f - s, -w + sr, t + h, f, w - sr, t + h, f, w, h + m, f - s); 
+	polygon(4, -w, h + m, f + r, -w + sr, t + h, f + r - br, w - sr, t + h, f + r - br, w, h + m, f + r);
+	// remember to unbind the texture so that we don't keep using it
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	// rear
+	polygon(4, -w, h, f + r, -w, h + m, f + r, w, h + m, f + r, w, h, f + r);
 
 }
 

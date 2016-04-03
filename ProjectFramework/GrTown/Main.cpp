@@ -139,6 +139,13 @@ int main(int /*argc*/, char** /*argv*/)
   GrObject* cube4 = new Cube(1,7.5,0, 2, 1,0,1);
   cube3->add(cube4);
 
+  // test car
+  Car* c1 = new HatchBack(1);
+  cube4->add(c1);
+  
+
+
+
     ////////////////////////////////////////////////////////////////////////
   // now to make a real town!
   int r,c;
