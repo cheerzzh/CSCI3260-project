@@ -38,6 +38,12 @@ public:
   virtual void draw(DrawingState*);
 };
 
-
+// snowman
+class SnowMan : public GrObject{
+public:
+	SnowMan(float x, float y, float z, float size);
+	float scale;
+	virtual void draw(DrawingState*);
+};
 
 

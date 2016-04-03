@@ -100,6 +100,17 @@ int main(int /*argc*/, char** /*argv*/)
   // *****************************************************************
   //  Make your town here
 
+  // add snowman 
+  GrObject* snowman1 = new SnowMan(-100, 0, -50, 30);
+  add(snowman1);
+  snowman1->name = "snowman1";
+  // make it an interesting object (so its easy to look at)
+  // and give a place to look at it from
+  // this is a good object to look at since it won't move //bookmark
+  snowman1->interesting = true;
+  snowman1->laX = 0; snowman1->laY = 0; snowman1->laZ = 0;
+  snowman1->lfX = 70; snowman1->lfY = 50; snowman1->lfZ = 0;
+
   // first, some really simple things
 
   // cubes are particularly easy since they set their own position
