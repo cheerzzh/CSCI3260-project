@@ -42,7 +42,8 @@ void Road::draw(DrawingState*)
   glPolygonOffset(-1.,-2.);
   glColor3f(.6f,.6f,.6f);
   glNormal3f(0,1,0);
-  fetchTexture("asphalt.png",true,true);
+  //fetchTexture("asphalt.png",true,true);
+  fetchTexture("road2.jpg", true, true);
   roadDraw();
   glDisable(GL_POLYGON_OFFSET_FILL);
 
@@ -99,15 +100,35 @@ RoundRoad::RoundRoad(float cx_, float cz_, float r_) :
 {
 }
 
+void RoundRoad::draw(DrawingState*)
+{
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(-1., -2.);
+	glColor3f(.6f, .6f, .6f);
+	glNormal3f(0, 1, 0);
+	fetchTexture("road1.jpg", true, true);
+	//fetchTexture("road_damaged.jpg");
+	//fetchTexture("asphalt.png", true, true);
+	roadDraw();
+	glDisable(GL_POLYGON_OFFSET_FILL);
+
+	// add yourself to the list of roads
+	theRoads.push_back(this);
+}
+
 void RoundRoad::roadDraw()
 {
 	glBegin(GL_QUAD_STRIP);
-	for(float u=0; u<=1.01; u+=.1f) {
-		float s = sin(2*pi*u);
+	// make it more smooth
+	int i = 0;
+	for(float u=0; u<=1.01; u+=.01f) {
+		float s = 1.5 * sin(2*pi*u);
 		float c = cos(2*pi*u);
-
+		glTexCoord2f(0, i);
 		glVertex3f(cx + c * (r+roadWidth), 0, cz + s * (r+roadWidth));
+		glTexCoord2f(1, i);
 		glVertex3f(cx + c * (r-roadWidth), 0, cz + s * (r-roadWidth));
+		i++;
 	}
 	glEnd();
 }
@@ -118,7 +139,7 @@ void RoundRoad::position(int lane, float u, float& x, float& z, float& dx, float
 	float th = u * 2 * pi;
 	if (lane) th *= -1;
 
-	float s = sin(th);
+	float s = 1.5 * sin(th);
 	float c = cos(th);
 
 	x = cx + c * lr;
@@ -211,14 +232,35 @@ Intersection::Intersection(float cx, float cz)
 		  if (lanes[i] > -1) assert(roads[i]);
 //	  printf("@ (%g %g) lanes [%d %d %d %d]\n",cx,cz,lanes[0],lanes[1],lanes[2],lanes[3]);
 }
+
+void Intersection::draw(DrawingState*)
+{
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(-1., -2.);
+	glColor3f(.6f, .6f, .6f);
+	glNormal3f(0, 1, 0);
+	fetchTexture("crossing.jpg", true, true);
+	//fetchTexture("road_damaged.jpg");
+	//fetchTexture("asphalt.png", true, true);
+	roadDraw();
+	glDisable(GL_POLYGON_OFFSET_FILL);
+
+	// add yourself to the list of roads
+	theRoads.push_back(this);
+}
 void Intersection::roadDraw()
 {
   glPushMatrix();
   glTranslatef(ax,0,az);
   glBegin(GL_POLYGON);
+  //fetchTexture("road1.jpg", true, true);
+  glTexCoord2f(0, 0);
   glVertex3f(-roadWidth,0, roadWidth);
+  glTexCoord2f(0, 1);
   glVertex3f( roadWidth,0, roadWidth);
+  glTexCoord2f(1, 1);
   glVertex3f( roadWidth,0,-roadWidth);
+  glTexCoord2f(1, 0);
   glVertex3f(-roadWidth,0,-roadWidth);
   glEnd();
   glPopMatrix();

@@ -98,6 +98,7 @@ class RoundRoad : public Road
 public:
   RoundRoad(float cx, float cz, float r);
 
+  virtual void draw(DrawingState*); // inherited to modify texture
   virtual void roadDraw();
   virtual void position(int lane, float u, 
 						float& x, float& z, float& dx, float& dz);
@@ -121,6 +122,7 @@ public:
 class Intersection : public Road
 {
 public:
+  virtual void draw(DrawingState*); // inherited to modify texture
   // creation will automatically connect to all existing roads
   Intersection(float cx, float cy);
 
