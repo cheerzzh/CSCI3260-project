@@ -143,7 +143,13 @@ int main(int /*argc*/, char** /*argv*/)
   Car* c1 = new HatchBack(1);
   cube4->add(c1);
   
-
+  // add fountain
+  GrObject* f1 = new Fountain;
+  f1->name = "Fountain1";
+  f1->interesting = true;
+  f1->laX = 0; f1->laY = 0; f1->laZ = 0;
+  f1->lfX = 70; f1->lfY = 50; f1->lfZ = 0;
+  add(f1, -100, 0, -150);
 
 
     ////////////////////////////////////////////////////////////////////////

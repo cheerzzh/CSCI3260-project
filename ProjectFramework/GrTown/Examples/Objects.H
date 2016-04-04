@@ -60,11 +60,25 @@ public:
 		const glm::vec3 &speed,
 		Color &color,
 		const glm::vec3 &pos = glm::vec3(0.0, 0.0, 0.0),
-		float weight = 1,
+		float weight = 0.7,
 		float size = 0.2,
 		float angle = 0
 		);
 	virtual void draw(DrawingState*);
+};
+
+class Fountain : public GrObject {
+public:
+	std::deque<Particle> particles;
+	int max_particles, gen_rate, life;
+	int evl_rate;
+	glm::vec3 g;
+	Color color;
+	clock_t last_gen_clock, last_evl_clock;
+	Fountain();
+	virtual void draw(DrawingState*);
+	void gen_particles();
+	void evolute();
 };
 
 
