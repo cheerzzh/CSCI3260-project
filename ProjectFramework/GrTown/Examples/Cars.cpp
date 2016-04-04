@@ -232,10 +232,21 @@ void Car::drawBody(DrawingState*)
 	// Bind texture
 	
 	if (!frontTexture)
+	{
 		frontTexture = fetchTexture("suv-front.png"); // fetch does the bind
+		//frontTexture = fetchTexture("windshield_full.bmp");
+	}
 	else frontTexture->bind();
 	
 	polygon(-4, -w, h + m, f - s, -w + sr, t + h, f, w - sr, t + h, f, w, h + m, f - s); 
+	/*
+	if (!backTexture)
+	{
+		backTexture = fetchTexture("windshield_full.bmp");; // fetch does the bind
+		//frontTexture = fetchTexture("windshield_full.bmp");
+	}
+	else backTexture->bind();
+	*/
 	polygon(4, -w, h + m, f + r, -w + sr, t + h, f + r - br, w - sr, t + h, f + r - br, w, h + m, f + r);
 	// remember to unbind the texture so that we don't keep using it
 	glBindTexture(GL_TEXTURE_2D, 0);

@@ -12,6 +12,9 @@
 
 #include "../GrObject.H"
 #include "../DrawingState.H"
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+#include <deque>
 
 // mainly for debugging
 class Cube : public GrObject {
@@ -43,6 +46,24 @@ class SnowMan : public GrObject{
 public:
 	SnowMan(float x, float y, float z, float size);
 	float scale;
+	virtual void draw(DrawingState*);
+};
+
+// particle system
+class Particle : public GrObject {
+public:
+	glm::vec3 pos, speed;
+	Color color;
+	float size, angle, weight;
+	float birth, life;
+	Particle(float life,
+		const glm::vec3 &speed,
+		Color &color,
+		const glm::vec3 &pos = glm::vec3(0.0, 0.0, 0.0),
+		float weight = 1,
+		float size = 0.2,
+		float angle = 0
+		);
 	virtual void draw(DrawingState*);
 };
 
