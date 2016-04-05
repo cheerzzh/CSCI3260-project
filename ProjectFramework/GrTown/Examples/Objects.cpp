@@ -76,11 +76,55 @@ void Fountain::evolute() {
 }
 
 void Fountain::draw(DrawingState *d) {
+	////base
+	GLfloat baseRadius1 = 18, baseRadius2 =10;
+	GLUquadricObj *obj = gluNewQuadric();
+	glColor3ub(230, 214, 160);
+	glPushMatrix();
+		glRotatef(-90, 1, 0, 0);
+		//layer1
+		gluCylinder(obj, baseRadius1, baseRadius1, 2, 30, 10);
+		gluCylinder(obj, baseRadius1-1, baseRadius1-1, 2, 30, 10);
+		//water area
+		glTranslatef(0, 0, 1.5);
+		glColor3ub(153,217,234);
+		gluDisk(obj, 0, baseRadius1-1, 30, 10);
+		//edge
+		glColor3ub(230, 214, 160);
+		glTranslatef(0, 0, 0.5);
+		gluDisk(obj, baseRadius1-1, baseRadius1, 30, 10);
+		glTranslatef(0, 0, -0.5);
+		//layer2
+		gluCylinder(obj, 4, 4, 2, 30, 10);
+		glTranslatef(0, 0, 2);
+		gluDisk(obj, 0, 4, 30, 10);
+		gluCylinder(obj, 3, 1.5, 1.5, 30, 10);
+		glTranslatef(0, 0, 1.5);
+		gluCylinder(obj, 1.5, 1.5, 5, 30, 10);
+		glTranslatef(0, 0, 5);
+		gluDisk(obj, 0, 2, 30, 10);
+		gluCylinder(obj, 2, 2, 1, 30, 10);
+		glTranslatef(0, 0, 1);
+		gluCylinder(obj, 2, baseRadius2, 2, 30, 10);
+		glTranslatef(0, 0, 2);
+		gluCylinder(obj, baseRadius2, baseRadius2, 2, 30, 10);
+		//water area
+		glTranslatef(0, 0, 1.5);
+		glColor3ub(153, 217, 234);
+		gluDisk(obj, 0, baseRadius2 - 1, 30, 10);
+		//edge
+		glColor3ub(230, 214, 160);
+		glTranslatef(0, 0, 0.5);
+		gluDisk(obj, baseRadius2 - 1, baseRadius2, 30, 10);
+	glPopMatrix();
+	////fountain
+	glTranslatef(0, 15, 0);
 	this->gen_particles();
 	this->evolute();
 	for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
 		it->draw(d);
 	}
+	
 }
 
 
