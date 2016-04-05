@@ -15,6 +15,21 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <deque>
+#include "Utilities/Texture.H"
+
+
+// sky
+class Sky: public GrObject {
+public:
+	Texture* dayTexture;
+	Texture* duskTexture;
+	Texture* nightTexure;
+public:
+	virtual void draw(DrawingState * d);
+	Sky();
+	void attachTexture(int currentTime);
+
+};
 
 // mainly for debugging
 class Cube : public GrObject {

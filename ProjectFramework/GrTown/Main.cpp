@@ -55,6 +55,10 @@ int main(int /*argc*/, char** /*argv*/)
   //o1->lfX = -50; o1->lfY = 100; o1->lfZ = 300;
   //add(o1,-100,0,100,pi/2.f);
 
+  // draw sky
+  GrObject * sky = new Sky;
+  add(sky, 0, 0, 0, 0);
+
   GrObject* church1 = new LutheranChurch;
   church1->interesting = true;
   church1->name = "St.Olav Church";

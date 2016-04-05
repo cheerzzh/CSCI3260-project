@@ -218,3 +218,144 @@ void ShadedCube::draw(DrawingState*)
 	glUseProgram(0);
 }
 
+//sky
+
+Sky::Sky() : GrObject("Sky")
+{
+	dayTexture = 0;
+	duskTexture = 0;
+	nightTexure = 0;
+}
+
+void Sky::attachTexture(int currentTime)
+{	
+	// better to bind once
+	char* skyTextureDay = "sky_day_0.png";
+	//char* skyTextureDay = "sky_day_3.jpg";
+	char* skyTexureNight = "sky_night_0.png";
+	char* skyTexureDusk = "sky_dwan_2.jpg";
+
+	// load 
+	if (!dayTexture)
+	{
+		dayTexture = fetchTexture(skyTextureDay);
+	}
+
+	if (!duskTexture)
+	{
+		duskTexture = fetchTexture(skyTexureDusk);
+	}
+
+	if (!nightTexure)
+	{
+		nightTexure = fetchTexture(skyTexureNight);
+	}
+
+	dayTexture->bind();
+	if (currentTime < 5) {
+		glColor3f(0.9, 0.9, 0.9); 
+		//fetchTexture(skyTexureNight);
+		nightTexure->bind();
+	}else if (currentTime < 7) {
+		glColor3f(0.9, 0.9, 0.9);
+		//fetchTexture(skyTexureNight);
+		duskTexture->bind();
+	}
+	else if (currentTime < 10) {
+		float amt = (((float)currentTime) - 6) / 3.0f;
+		glColor3f(amt, amt, amt);
+		//fetchTexture(skyTextureDay);
+		dayTexture->bind();
+	
+	}
+	else if (currentTime < 17) {
+		glColor3f(1, 1, 1);
+		//fetchTexture(skyTextureDay);
+		dayTexture->bind();
+	}
+	else if (currentTime < 20) {
+		float amt = (20 - (float)currentTime) / 3.0f;
+		glColor3f(amt, amt, amt);
+		//fetchTexture(skyTexureDusk);
+		duskTexture->bind();
+	}
+	else {
+		glColor3f(0.9, 0.9, 0.9);
+		//fetchTexture(skyTexureNight);
+		nightTexure->bind();
+	}
+}
+
+void Sky::draw(DrawingState * d)
+{
+	//int currentTime = d->timeOfDay;
+	glPushMatrix();
+	glScalef(10000, 10000, 10000);
+
+	glDisable(GL_LIGHTING);
+	attachTexture(d->timeOfDay);
+
+	glBegin(GL_QUADS);
+	//front
+	glNormal3f(0, 0, 1);
+	glTexCoord2f(.25,.75);
+	glVertex3f(-1, -1, -1);
+	glTexCoord2f(.25,  .5);
+	glVertex3f( 1, -1, -1);
+	glTexCoord2f(.5,  .5);
+	glVertex3f( 1,  1, -1);
+	glTexCoord2f(.5, .75);
+	glVertex3f(-1,1,-1);
+
+	//right
+	glNormal3f(-1, 0, 0);
+	//glColor3f(0, 0, 1);
+	glTexCoord2f(.25,  .5);
+	glVertex3f(1, -1, -1);
+	glTexCoord2f(.25, .25);
+	glVertex3f(1, -1, 1);
+	glTexCoord2f( .5, .25);
+	glVertex3f(1, 1, 1);
+	glTexCoord2f( .5,  .5);
+	glVertex3f(1, 1, -1);
+
+	//back
+	glNormal3f(0, 0, -1);
+	//glColor3f(0, 1, 0);
+	glTexCoord2f(.25,   0);
+	glVertex3f(-1, -1, 1);
+	glTexCoord2f( .5,   0);
+	glVertex3f(-1,  1, 1);
+	glTexCoord2f( .5, .25);
+	glVertex3f( 1,  1, 1);
+	glTexCoord2f(.25, .25);
+	glVertex3f( 1, -1, 1);
+
+	//left
+	glNormal3f(1, 0, 0);
+	//glColor3f(0, 1, 1);
+	glTexCoord2f(.25, .75);
+	glVertex3f(-1, -1,  -1);
+	glTexCoord2f( .5, .75);
+	glVertex3f(-1, 1,  -1);
+	glTexCoord2f( .5, 1);
+	glVertex3f(-1,  1,  1);
+	glTexCoord2f(.25, 1);
+	glVertex3f(-1, -1,  1);
+	//top
+	glNormal3f(0, -1, 0);
+	//glColor3f(1, 0, 0);
+	glTexCoord2f( .5, .75);
+	glVertex3f(-1.01, 0.99, -1.01);
+	glTexCoord2f( .5,  .5);
+	glVertex3f(1.01, 0.99, -1.01);
+	glTexCoord2f(.75,  .5);
+	glVertex3f(1.01, 0.99, 1.01);
+	glTexCoord2f(.75, .75);
+	glVertex3f(-1.01, 0.99, 1.01);
+	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glPopMatrix();
+	glEnable(GL_LIGHTING);
+}
+
