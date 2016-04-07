@@ -208,7 +208,6 @@ static void drawChimney(GLint halfWidth, GLint height) {
 	//top
 	polygoni(-4, -halfWidth, height, halfWidth, halfWidth, height, halfWidth,
 		halfWidth, height, -halfWidth, -halfWidth, height, -halfWidth);
-	glEnd();
 }
 
 void TownHall::draw(DrawingState*)
@@ -687,7 +686,7 @@ void drawTVTowerPole(GLfloat radius) {
 	glPopMatrix();
 }
 
-void TVTower::draw(DrawingState* d)
+void TVTower::draw(DrawingState* s)
 {
 	GLfloat baseHeight = 3, towerHeight = 90, middleHeight = 5, aerialHeight = 70, baseRadius = 25, towerRadius = 6, middleRadius = 12, aerialRadius = 2, aerialSectionCount = 10;
 	////base
@@ -697,16 +696,28 @@ void TVTower::draw(DrawingState* d)
 	gluCylinder(obj, baseRadius, baseRadius, baseHeight, 20, 10);
 	glTranslatef(0, 0, baseHeight);
 	gluDisk(obj, 0, baseRadius, 20, 10);
+		
+	GLfloat mat_emissive_none[4] = { 0.0, 0.0, 0.0, 1.0 };
+	int currentTime = s->timeOfDay; 
+	bool lightOn = currentTime < 6 || currentTime>19;
+	if (lightOn) {
+		GLfloat mat_emissive[4] = { 0, 0, 0.5, 1.0 };
+		glMaterialfv(GL_FRONT, GL_EMISSION, mat_emissive);
+	}
 	////tower
 	gluCylinder(obj, towerRadius, towerRadius*0.5, towerHeight, 20, 30);
 	////middle
 	glTranslatef(0, 0, towerHeight);
+	if (lightOn) {
+		GLfloat mat_emissive[4] = { 0.5, 0, 0, 1.0 };
+		glMaterialfv(GL_FRONT, GL_EMISSION, mat_emissive);
+	}
 	//poles
 	glPushMatrix();
-		for (int i = 0; i < 12; i++) {
-			glRotatef(30, 0, 0, 1);
-			drawTVTowerPole(middleRadius);
-		}
+	for (int i = 0; i < 12; i++) {
+		glRotatef(30, 0, 0, 1);
+		drawTVTowerPole(middleRadius);
+	}
 	glPopMatrix();
 	//layer1
 	glTranslatef(0, 0, 8);
@@ -716,7 +727,10 @@ void TVTower::draw(DrawingState* d)
 	glTranslatef(0, 0, 2);
 	gluDisk(obj, 0, middleRadius*0.9, 20, 10);
 	//layer2
-	
+	if (lightOn) {
+		GLfloat mat_emissive[4] = { 0, 0.5, 0, 1.0 };
+		glMaterialfv(GL_FRONT, GL_EMISSION, mat_emissive);
+	}
 	glColor3ub(0, 183, 238);
 	gluCylinder(obj, middleRadius*0.85, middleRadius*0.9, 3.5, 20, 10);
 	glTranslatef(0, 0, 3.5);
@@ -731,7 +745,7 @@ void TVTower::draw(DrawingState* d)
 	gluCylinder(obj, middleRadius*0.7, middleRadius*0.7, 3, 20, 10);
 	glTranslatef(0, 0, 3);
 	gluDisk(obj, 0, middleRadius*0.7, 20, 10);
-
+	glMaterialfv(GL_FRONT, GL_EMISSION, mat_emissive_none);
 	////aerial
 	//base
 	glColor3ub(255, 0, 0);

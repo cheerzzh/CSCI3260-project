@@ -434,3 +434,87 @@ void Sky::draw(DrawingState * d)
 	glEnable(GL_LIGHTING);
 }
 
+HotAirBalloon::HotAirBalloon() : GrObject("Balloon")
+{	
+}
+
+void HotAirBalloon::draw(DrawingState*) {
+	glTranslatef(0, 100, 0);
+	double radius = 20, height = 30;
+	double verticalSliceHeight = 2;
+	int horizontalSliceCount = 12;
+	int verticalSliceCount1 = radius/verticalSliceHeight;
+	int verticalSliceCount2 = height / verticalSliceHeight;
+	GLint halfBasketWidth = 3;
+	for (int i = 0; i <	horizontalSliceCount; i++) {
+		double theta1 = 2 * pi / horizontalSliceCount*i;
+		double theta2 = 2 * pi / horizontalSliceCount*(i + 1);
+		if (i % 2 == 0) glColor3ub(255, 200, 14); else glColor3ub(153, 217, 234);
+		for (int j = 0; j < verticalSliceCount1; j++) {
+			double h = radius - verticalSliceHeight * j;
+			double layerRadius1 = sqrt(radius * radius - h * h);
+			h = radius - verticalSliceHeight * (j + 1);
+			double layerRadius2 = sqrt(radius * radius - h * h);
+
+			double y1 = -verticalSliceHeight*j;
+			double y2 = -verticalSliceHeight*(j + 1);
+			double pt1x = layerRadius1*cos(theta1);
+			double pt1z = -layerRadius1*sin(theta1);
+			double pt2x = layerRadius2*cos(theta1);
+			double pt2z = -layerRadius2*sin(theta1);
+			double pt3x = layerRadius2*cos(theta2);
+			double pt3z = -layerRadius2*sin(theta2);
+			double pt4x = layerRadius1*cos(theta2);
+			double pt4z = -layerRadius1*sin(theta2);
+			polygon(-4, pt1x, y1, pt1z, pt2x, y2, pt2z, pt3x, y2, pt3z, pt4x, y1, pt4z);
+		}
+		double y1 = -radius;
+		double y2 = -radius-verticalSliceHeight;
+		double pt1x = radius*cos(theta1);
+		double pt1z = -radius*sin(theta1);
+		double pt2x = radius*cos(theta1);
+		double pt2z = -radius*sin(theta1);
+		double pt3x = radius*cos(theta2);
+		double pt3z = -radius*sin(theta2);
+		double pt4x = radius*cos(theta2);
+		double pt4z = -radius*sin(theta2);
+		polygon(-4, pt1x, y1, pt1z, pt2x, y2, pt2z, pt3x, y2, pt3z, pt4x, y1, pt4z);
+		for (int j = 0; j < verticalSliceCount2; j++) {
+			double h = height - verticalSliceHeight * j;
+			double layerRadius1 = sqrt(h/height)*radius;
+			h = height - verticalSliceHeight * (j+1);
+			double layerRadius2 = sqrt(h / height)*radius;
+
+			double y1 = -verticalSliceHeight*(j + 1)-radius;
+			double y2 = -verticalSliceHeight*(j + 2)-radius;
+			double pt1x = layerRadius1*cos(theta1);
+			double pt1z = -layerRadius1*sin(theta1);
+			double pt2x = layerRadius2*cos(theta1);
+			double pt2z = -layerRadius2*sin(theta1);
+			double pt3x = layerRadius2*cos(theta2);
+			double pt3z = -layerRadius2*sin(theta2);
+			double pt4x = layerRadius1*cos(theta2);
+			double pt4z = -layerRadius1*sin(theta2);
+			polygon(-4, pt1x, y1, pt1z, pt2x, y2, pt2z, pt3x, y2, pt3z, pt4x, y1, pt4z);
+		}
+	}
+	//basket
+	glTranslatef(0, -radius - height-15, 0);
+	//front
+	glColor3ub(255, 255, 255);
+	polygoni(-4, -halfBasketWidth, 0, halfBasketWidth, halfBasketWidth, 0, halfBasketWidth,
+		halfBasketWidth, 3, halfBasketWidth, -halfBasketWidth, 3, halfBasketWidth);
+	//right
+	polygoni(-4, halfBasketWidth, 0, halfBasketWidth, halfBasketWidth, 0, -halfBasketWidth,
+		halfBasketWidth, 3, -halfBasketWidth, halfBasketWidth, 3, halfBasketWidth);
+	//left
+	polygoni(-4, -halfBasketWidth, 0, -halfBasketWidth, -halfBasketWidth, 0, halfBasketWidth,
+		-halfBasketWidth, 3, halfBasketWidth, -halfBasketWidth, 3, -halfBasketWidth);
+	//back
+	polygoni(-4, halfBasketWidth, 0, -halfBasketWidth, -halfBasketWidth, 0, -halfBasketWidth,
+		-halfBasketWidth, 3, -halfBasketWidth, halfBasketWidth, 3, -halfBasketWidth);
+	//top
+	polygoni(4, -halfBasketWidth, 0, halfBasketWidth, halfBasketWidth, 0, halfBasketWidth,
+		halfBasketWidth, 0, -halfBasketWidth, -halfBasketWidth, 0, -halfBasketWidth);
+}
+
