@@ -96,4 +96,15 @@ public:
 	void evolute();
 };
 
+class HotAirBalloon : public GrObject {
+public:
+	HotAirBalloon();
+	virtual void draw(DrawingState*);
+};
+
+class Pedestrian : public GrObject {
+public:
+	Pedestrian();
+	virtual void draw(DrawingState*);
+};
 

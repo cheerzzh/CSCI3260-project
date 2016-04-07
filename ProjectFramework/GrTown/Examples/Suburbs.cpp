@@ -208,7 +208,6 @@ static void drawChimney(GLint halfWidth, GLint height) {
 	//top
 	polygoni(-4, -halfWidth, height, halfWidth, halfWidth, height, halfWidth,
 		halfWidth, height, -halfWidth, -halfWidth, height, -halfWidth);
-	glEnd();
 }
 
 void TownHall::draw(DrawingState*)

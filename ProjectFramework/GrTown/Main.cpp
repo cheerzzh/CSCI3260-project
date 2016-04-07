@@ -101,6 +101,13 @@ int main(int /*argc*/, char** /*argv*/)
   townhall->lfX = -50; townhall->lfY = 100; townhall->lfZ = 300;
   add(townhall, -50, 0, 620, pi / 2.f);
 
+  GrObject* balloon = new HotAirBalloon;
+  balloon->name = "Balloon";
+  balloon->interesting = true;
+  balloon->laX = 0; balloon->laY = 0; balloon->laZ = 0;
+  balloon->lfX = -50; balloon->lfY = 100; balloon->lfZ = 300;
+  add(balloon, -50, 0, 700, pi / 2.f);
+
   // *****************************************************************
   //  Make your town here
 
