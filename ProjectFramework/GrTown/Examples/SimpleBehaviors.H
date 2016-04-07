@@ -42,4 +42,11 @@ public:
   virtual void simulateUntil(unsigned long);
 };
 
+// emit firework
+class emitFireWork :public Behavior{
+public:
+	emitFireWork(GrObject* owner, int phase = 0);
+	int phase, last;
+	virtual void simulateUntil(unsigned long);
+};
 

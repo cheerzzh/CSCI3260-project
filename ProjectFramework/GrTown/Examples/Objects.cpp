@@ -156,6 +156,67 @@ void Fountain::draw(DrawingState *d) {
 }
 
 //======== firework =======
+glm::vec3 rand_fire_speed() {
+	glm::vec3 v(0.0f, 1.0f, 0.0f);
+	v = glm::rotate(v, (float)rand() / RAND_MAX * 360, glm::vec3(1.0f, 0.0f, 0.0f));
+	v = glm::rotate(v, (float)rand() / RAND_MAX * 360, glm::vec3(0.0f, 1.0f, 0.0f));
+	return v;
+}
+
+Fireworks::Fireworks(Color _color) : GrObject("Fireworks"), color(_color) {
+	color.a = 1.0f;
+	max_particles = 10000;
+	gen_rate = 100;
+	life = 5;
+	evl_rate = 30;
+	gen_evl = 0;
+	g = glm::vec3(0.0f, -1.0f, 0.0f);
+	start = false;
+	last_gen_clock = last_evl_clock = clock();
+}
+
+void Fireworks::gen_particles() {
+	clock_t c = clock();
+	while (!particles.empty() && particles.front().birth + particles.front().life * CLOCKS_PER_SEC <= c) {
+		particles.pop_front();
+	}
+	double t = (double)(c - last_gen_clock) / CLOCKS_PER_SEC;
+	int evl = (int)(t * evl_rate);
+	if (evl > 0) last_gen_clock = c;
+	for (; evl > 0 && gen_evl > 0; evl--, gen_evl--) {
+		for (int gen = 0; gen < gen_rate && particles.size() < max_particles; gen++) {
+			particles.push_back(Particle(life, rand_fire_speed(), color, glm::vec3(0.0, 0.0, 0.0), 0.1f, (float)rand() / RAND_MAX * 0.2 + 0.2, (float)rand() / RAND_MAX * 360));
+		}
+	}
+}
+
+void Fireworks::evolute() {
+	clock_t c = clock();
+	double t = (double)(c - last_evl_clock) / CLOCKS_PER_SEC;
+	for (int evl = (int)(t * evl_rate); evl > 0; evl--) {
+		for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
+			it->pos += it->speed;
+			glm::vec3 a = it->weight * g;
+			a *= t;
+			it->speed += a;
+			it->color.a *= 0.98;
+		}
+		last_evl_clock = c;
+	}
+}
+
+void Fireworks::draw(DrawingState *d) {
+	if ((d->timeOfDay > 4 && d->timeOfDay < 20)) return;
+	if (start) {
+		gen_evl = 3;
+		start = false;
+	}
+	this->gen_particles();
+	this->evolute();
+	for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
+		it->draw(d);
+	}
+}
 
 //================
 

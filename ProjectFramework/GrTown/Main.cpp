@@ -162,6 +162,16 @@ int main(int /*argc*/, char** /*argv*/)
   f1->lfX = 70; f1->lfY = 50; f1->lfZ = 0;
   add(f1, -100, 0, -150);
 
+  // add firework
+  GrObject* fw;
+ 
+  Color colors[] = { Color(1.0, 0.0, 0.0), Color(0.0, 1.0, 0.0), Color(0.0, 1.0, 1.0), Color(1.0, 1.0, 0.0), Color(1.0, 0.0, 1.0) };
+  for (int i = 0; i < 5; i++) {
+	  fw = new Fireworks(colors[rand() % (sizeof(colors) / sizeof(Color))]);
+	  fw->interesting = false;
+	  add(fw, rand() % 2000, rand() % 100 + 100, rand() % 1000);
+	  new emitFireWork(fw, rand() % 5000);
+  }
 
     ////////////////////////////////////////////////////////////////////////
   // now to make a real town!

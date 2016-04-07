@@ -10,6 +10,7 @@
 #include "../GrObject.H"
 
 #include "SimpleBehaviors.H"
+#include "Objects.H"
 
 //////////////////////////////////////////////////////////////////////
 // a trick - since we don't care much about what the rotation is (only
@@ -68,3 +69,18 @@ void TurnAlways::simulateUntil(unsigned long t)
   lastV = t;
 }
 
+// emit firework
+emitFireWork::emitFireWork(GrObject* o, int p)
+	: Behavior(o), phase(p)
+{
+	last = lastV;
+}
+
+void emitFireWork::simulateUntil(unsigned long t)
+{
+	if ((t + phase - last) > 5000) {
+		((Fireworks *)owner)->start = true;
+		last = t + phase;
+	}
+	lastV = t;
+}
