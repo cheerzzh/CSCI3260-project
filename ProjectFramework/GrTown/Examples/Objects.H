@@ -84,16 +84,33 @@ public:
 
 class Fountain : public GrObject {
 public:
-	std::deque<Particle> particles;
+	std::deque<Particle> particles,particles_layer2;
 	int max_particles, gen_rate, life;
 	int evl_rate;
-	glm::vec3 g;
-	Color color;
+	glm::vec3 g,g2;
+	Color color,color_layer2;
 	clock_t last_gen_clock, last_evl_clock;
 	Fountain();
+
 	virtual void draw(DrawingState*);
 	void gen_particles();
 	void evolute();
 };
 
+class Fireworks : public GrObject {
+public:
+	std::deque<Particle> particles;
+	int max_particles, gen_rate, life;
+	int evl_rate;
+	int gen_evl;
+	bool start;
+	glm::vec3 g;
+	Color color;
+	clock_t last_gen_clock, last_evl_clock;
+	Fireworks(Color color);
+
+	virtual void draw(DrawingState*);
+	void gen_particles();
+	void evolute();
+};
 

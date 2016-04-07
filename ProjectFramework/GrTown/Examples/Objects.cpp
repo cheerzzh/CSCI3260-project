@@ -26,36 +26,50 @@ void Particle::draw(DrawingState*) {
 	glRotatef(angle, 0, 1, 0);
 	glScalef(size, size, size);
 	glTranslatef(pos[0] / size, pos[1] / size, pos[2] / size);
-	glutSolidSphere(1.0, 5, 5);
+	glutSolidSphere(1.0, 5, 5); // a particle instance
 	glPopMatrix();
 	glDisable(GL_BLEND);
 }
 
-glm::vec3 rand_water_speed() {
+glm::vec3 rand_water_speed(float direction,float height) {
 	glm::vec3 v(0.0f, 1.0f, 0.0f);
-	v = glm::rotate(v, (float)rand() / RAND_MAX * 10 + 10, glm::vec3(1.0f, 0.0f, 0.0f));
+	v = glm::rotate(v, ((float)rand() / RAND_MAX * 10 + 10) * direction, glm::vec3(1.0f, 0.0f, 0.0f));
 	v = glm::rotate(v, (float)rand() / RAND_MAX * 360, glm::vec3(0.0f, 1.0f, 0.0f));
+	//v = glm::translate(v, glm::vec3(0.0f,1.0f,0.0f));
+	v *= glm::vec3(1.f, height, 1.f);
 	return v;
 }
 
 Fountain::Fountain() : GrObject("Fountain") {
 	color(.4f, 0.698f, 1.0f, 1.0f);
-	max_particles = 15000;
+	color_layer2(1.f, 0.398f, 0.f, 1.0f);
+	max_particles = 25000;
 	gen_rate = 130;
 	life = 4;
 	evl_rate = 30;
 	g = glm::vec3(0.0f, -1.0f, 0.0f);
+	g2 = glm::vec3(0.0f, -0.5f, 0.0f);
 	last_gen_clock = last_evl_clock = clock();
 }
 
 void Fountain::gen_particles() {
 	clock_t c = clock();
+	// end life of old particles
 	while (!particles.empty() && particles.front().birth + particles.front().life * CLOCKS_PER_SEC <= c) {
 		particles.pop_front();
 	}
+
+	while (!particles_layer2.empty() && particles_layer2.front().birth + particles_layer2.front().life * CLOCKS_PER_SEC <= c) {
+		particles_layer2.pop_front();
+	}
 	double t = (double)(c - last_gen_clock) / CLOCKS_PER_SEC;
 	for (int gen = (int)(t * gen_rate); gen > 0 && particles.size() < max_particles; gen--) {
-		particles.push_back(Particle(life, rand_water_speed(), color, glm::vec3(0.0, 0.0, 0.0), 1.0f, (float)rand() / RAND_MAX * 0.2 + 0.1, (float)rand() / RAND_MAX * 360));
+		particles.push_back(Particle(life, rand_water_speed(1,0.9), color, glm::vec3(0.0, 0.0, 0.0), 1.0f, (float)rand() / RAND_MAX * 0.15 + 0.1, (float)rand() / RAND_MAX * 360));
+		last_gen_clock = c;
+	}
+
+	for (int gen = (int)(t * gen_rate); gen > 0 && particles_layer2.size() < max_particles; gen--) {
+		particles_layer2.push_back(Particle(life, rand_water_speed(0.3,1.3), color, glm::vec3(0.0, 0.0, 0.0), 1.0f, (float)rand() / RAND_MAX * 0.15 + 0.1, (float)rand() / RAND_MAX * 360));
 		last_gen_clock = c;
 	}
 }
@@ -69,8 +83,17 @@ void Fountain::evolute() {
 			glm::vec3 a = it->weight * g;
 			a *= t;
 			it->speed += a;
-			it->color.a *= 0.96;
+			it->color.a *= 0.98;
 		}
+
+		for (std::deque<Particle>::iterator it = particles_layer2.begin(); it != particles_layer2.end(); it++) { // for each generated particle
+			it->pos += it->speed;
+			glm::vec3 a = it->weight * g;
+			a *= t;
+			it->speed += a;
+			it->color.a *= 0.98;
+		}
+
 		last_evl_clock = c;
 	}
 }
@@ -121,12 +144,20 @@ void Fountain::draw(DrawingState *d) {
 	glTranslatef(0, 15, 0);
 	this->gen_particles();
 	this->evolute();
+	// draw for each particles 
 	for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
+		it->draw(d);
+	}
+
+	for (std::deque<Particle>::iterator it = particles_layer2.begin(); it != particles_layer2.end(); it++) {
 		it->draw(d);
 	}
 	
 }
 
+//======== firework =======
+
+//================
 
 
 SnowMan::SnowMan(float x, float y, float z, float size)
