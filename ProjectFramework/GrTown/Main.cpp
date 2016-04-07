@@ -49,12 +49,6 @@ int main(int /*argc*/, char** /*argv*/)
 
 
   // add some more stuff
-  //GrObject* o1 = new Church;
-  //o1->interesting = true;
-  //o1->laX = 0; o1->laY = 0; o1->laZ = 0;
-  //o1->lfX = -50; o1->lfY = 100; o1->lfZ = 300;
-  //add(o1,-100,0,100,pi/2.f);
-
   // draw sky
   GrObject * sky = new Sky;
   add(sky, 0, 0, 0, 0);
