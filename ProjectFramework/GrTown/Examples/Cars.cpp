@@ -9,6 +9,7 @@
 #include "../DrawingState.H"
 #include "Cars.H"
 
+extern GLUquadric *qobj;
 /////////////////////////////////////////////////////
 // car colors have names too
 struct CarColors {
@@ -50,6 +51,7 @@ Car::Car(char* name, int c) : GrObject(name,carCtr,cc[c%nCarCols].name)
 	 // so we just say that we don't have textures
 	frontTexture = 0;
 	sideTexture = 0;
+	lampTexture = 0;
 }
 
 // draw a wheel
@@ -85,7 +87,7 @@ static void drawWheel(float r, float w)
 static void drawWheel1(float radius, float width)
 {
 	glPushMatrix();
-	GLUquadric *qobj = gluNewQuadric();
+	
 	// Car wheels
 	for (int i = -1; i <= 1; i += 2) {
 		for (int j = -1; j <= 1; j += 2) {
@@ -107,6 +109,20 @@ static void drawWheel1(float radius, float width)
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glPopMatrix();
+}
+
+static void drawWheel2(float radius, float width)
+{
+	glPushMatrix();
+	glRotatef(-90 , 0, 1, 0);
+	fetchTexture("wheel_side_texture.bmp");
+	gluCylinder(qobj, radius, radius, 3, 50, 20);
+	glTranslatef(0, 0, 0.3);
+	fetchTexture("wheel_texture.bmp");
+	//glBindTexture(GL_TEXTURE_2D, wheelTexture);
+	gluDisk(qobj, 0, radius, 50, 20);
+	glPopMatrix();
+	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Car::draw(DrawingState* d)
@@ -206,18 +222,30 @@ void Car::drawBody(DrawingState*)
 	//=============================================================
 	// Now the cars are simply boxes with different hights. 
     // TODO2: To make the cars look more realistic and add texutres. 
-	// front
+	// lamp
+
+	fetchTexture("car_eye.jpg");
 	polygon(-4, -w, h, 0., -w, h + m - a, 0., w, h + m - a, 0., w, h, 0.);
+	glBindTexture(GL_TEXTURE_2D, 0);
+	fetchTexture("car_hood_1.jpg");
 	// hood
 	polygon(-4, -w, h + m - a, 0., -w, h + m, f, w, h + m, f, w, h + m - a, 0.);
-	// fenders
+	glBindTexture(GL_TEXTURE_2D, 0);
+	fetchTexture("car_side_3.jpg");
+	//fenders
 	polygon(-4, -w, h, 0., -w, h, f, -w, h + m, f, -w, h + m - a, 0.); 
 	polygon(4, w, h, 0., w, h, f, w, h + m, f, w, h + m - a, 0.);
 
 	// top
+	fetchTexture("car_top_1.jpg");
 	polygon(-4, -w + sr, t + h, f, -w + sr, t + h, f + r - br, w - sr, t + h, f + r - br, w - sr, t + h, f);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	if (!sideTexture)
+	{
 		sideTexture = fetchTexture("suv-side.png"); // fetch does the bind
+		//sideTexture = fetchTexture("windshield_full.bmp");
+		//sideTexture = fetchTexture("car_side_3.jpg");
+	}
 	else sideTexture->bind();
 	// left side (x-), right side (x+), bottoms
 	polygon(-4, -w, h + m, f - s, -w, h + m, f + r, -w + sr, t + h, f + r - br, -w + sr, t + h, f);
@@ -226,6 +254,7 @@ void Car::drawBody(DrawingState*)
 	// left side (x-), right side (x+), tops
 	
 	glBindTexture(GL_TEXTURE_2D, 0);
+	fetchTexture("car_side_2.jpg");
 	polygon(-4, -w, h, f, -w, h, f + r, -w, m + h, f + r, -w, m + h, f);
 	polygon(4, w, h, f, w, h, f + r, w, m + h, f + r, w, m + h, f);
 
@@ -233,8 +262,9 @@ void Car::drawBody(DrawingState*)
 	
 	if (!frontTexture)
 	{
-		frontTexture = fetchTexture("suv-front.png"); // fetch does the bind
-		//frontTexture = fetchTexture("windshield_full.bmp");
+		//frontTexture = fetchTexture("suv-front.png"); // fetch does the bind
+		frontTexture = fetchTexture("windshield_full.jpg");
+		
 	}
 	else frontTexture->bind();
 	
@@ -247,12 +277,16 @@ void Car::drawBody(DrawingState*)
 	}
 	else backTexture->bind();
 	*/
+	fetchTexture("car_back_1.jpg");
+	//fetchTexture("windshield_full.jpg");
 	polygon(4, -w, h + m, f + r, -w + sr, t + h, f + r - br, w - sr, t + h, f + r - br, w, h + m, f + r);
 	// remember to unbind the texture so that we don't keep using it
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// rear
+	fetchTexture("car_rear_1.jpg");
 	polygon(4, -w, h, f + r, -w, h + m, f + r, w, h + m, f + r, w, h, f + r);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 }
 

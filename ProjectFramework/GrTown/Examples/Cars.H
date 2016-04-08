@@ -13,8 +13,7 @@ class Car : public GrObject {
  public:
 	Texture* sideTexture;
 	Texture* frontTexture;
-	Texture* backTexture;
-
+	Texture* backTexture, *lampTexture;
   Car(char* type, int color);
   Color color;
 

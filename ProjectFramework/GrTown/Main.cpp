@@ -30,6 +30,7 @@
 
 const int numCars = 1;
 const int nGrids = 5;
+GLUquadric *qobj = gluNewQuadric();
 
 int main(int /*argc*/, char** /*argv*/)
 { 
