@@ -163,7 +163,7 @@ void SimpleHouse1::draw(DrawingState*)
 	polygoni(-4, -20,30,-25, -20,30, 25,   0, 45, 25,   0, 45, -25);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	//chimney
-	glTranslatef(10, 35, -10);
+	glTranslatef(10, 35, -15);
 	drawChimney(2, 12);	
 }
 
@@ -280,13 +280,49 @@ void SimpleHouse3::draw(DrawingState*)
 		glTexCoord2f(0, 0); glVertex3i(-30, 0, -20);
 		//right
 		glNormal3f(1, 0, 0);
-		glTexCoord2f(3, 0); glVertex3i(30, 0, 20);
+		glTexCoord2f(3, 0); glVertex3i(30, 0, -20);
 		glTexCoord2f(3, 1); glVertex3i(30, 30, -20);
-		glTexCoord2f(0, 1); glVertex3i(30, 30, -20);
+		glTexCoord2f(0, 1); glVertex3i(30, 30, 20);
 		glTexCoord2f(0, 0); glVertex3i(30, 0, 20);
 	glEnd();
+	//roof
 	fetchTexture("roof.bmp");
 	glColor3ub(255,255, 255);
+	glBegin(GL_QUADS);
+		//front roof
+		glNormal3f(0, 0.8, 0.6);
+		glTexCoord2f(0, 0); glVertex3i(-30, 30, 20);
+		glTexCoord2f(1, 0); glVertex3i(30, 30, 20);
+		glTexCoord2f(0.8, 1); glVertex3i(18, 45, 0);
+		glTexCoord2f(0.2, 1); glVertex3i(-18, 45, 0);
+		//back roof
+		glNormal3f(0, 0.8, -0.6);
+		glTexCoord2f(0, 0); glVertex3i(30, 30, -20);
+		glTexCoord2f(1, 0); glVertex3i(-30, 30, -20);
+		glTexCoord2f(0.8, 1); glVertex3i(-18, 45, 0);
+		glTexCoord2f(0.2, 1); glVertex3i(18, 45, 0);
+	glEnd();
+	GLfloat y = 4 / sqrt(41);
+	GLfloat x = 5 / sqrt(41);
+	glBegin(GL_TRIANGLES);
+		//left roof
+		glNormal3f(-x, y, 0);
+		glTexCoord2f(0, 0); glVertex3i(-30, 30, -20);
+		glTexCoord2f(0.8, 0); glVertex3i(-30, 30, 20);
+		glTexCoord2f(0.4, 1); glVertex3i(-18, 45, 0);
+		//right roof
+		glNormal3f(x, y, 0);
+		glTexCoord2f(0, 0); glVertex3i(30, 30, 20);
+		glTexCoord2f(0.8, 0); glVertex3i(30, 30, -20);
+		glTexCoord2f(0.4, 1); glVertex3i(18, 45, 0);
+	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
+	//chimney
+	glTranslatef(0, 43, 0);
+	glTranslatef(-14, 0, 0);
+	drawChimney(2, 6);
+	glTranslatef(28, 0, 0);
+	drawChimney(2, 6);
 }
 
 
@@ -335,7 +371,8 @@ void TownHall::draw(DrawingState*)
 
 	////roof
 	glTranslatef(0, hallHeight, 0);
-	glColor3ub(200, 90, 60);
+	fetchTexture("roof.bmp");
+	glColor3ub(255, 255, 255);
 	GLfloat v1[3] = { hallHalfWidth - roofHalfWidth, roofHeight, 0 };
 	normalize(v1);
 	GLfloat v2[3] = { -hallHalfWidth + roofHalfWidth, roofHeight, 0 };
@@ -345,29 +382,32 @@ void TownHall::draw(DrawingState*)
 	GLfloat v4[3] = { 0, length / 2, -roofHeight };
 	normalize(v4);
 	glBegin(GL_TRIANGLES);
+		//right roof
 		glNormal3f(v1[0], v1[1], v1[2]);
-		glVertex3f(hallHalfWidth, 0,0);
-		glVertex3f(hallHalfWidth, 0, -length);
-		glVertex3f(roofHalfWidth, roofHeight, -length/2);
-
+		glTexCoord2f(0, 0); glVertex3f(hallHalfWidth, 0, 0);
+		glTexCoord2f(0.8, 0); glVertex3f(hallHalfWidth, 0, -length);
+		glTexCoord2f(0.4, 1); glVertex3f(roofHalfWidth, roofHeight, -length / 2);
+		//left roof
 		glNormal3f(v2[0], v2[1], v2[2]);
-		glVertex3f(-hallHalfWidth, 0, 0);
-		glVertex3f(-roofHalfWidth, roofHeight, -length / 2);
-		glVertex3f(-hallHalfWidth, 0, -length);
+		glTexCoord2f(0.8, 0); glVertex3f(-hallHalfWidth, 0, 0);
+		glTexCoord2f(0.4, 1); glVertex3f(-roofHalfWidth, roofHeight, -length / 2);
+		glTexCoord2f(0, 0); glVertex3f(-hallHalfWidth, 0, -length);
 	glEnd();
 	glBegin(GL_QUADS);
+		//front roof
 		glNormal3f(v3[0], v3[1], v3[2]);
-		glVertex3f(hallHalfWidth, 0, 0);
-		glVertex3f(roofHalfWidth, roofHeight, -length/2);
-		glVertex3f(-roofHalfWidth, roofHeight, -length / 2);
-		glVertex3f(-hallHalfWidth, 0, 0);
-
+		glTexCoord2f(0, 0); glVertex3f(-hallHalfWidth, 0, 0);
+		glTexCoord2f(1, 0); glVertex3f(hallHalfWidth, 0, 0);
+		glTexCoord2f(0.7857, 1); glVertex3f(roofHalfWidth, roofHeight, -length / 2);
+		glTexCoord2f(0.2143, 1); glVertex3f(-roofHalfWidth, roofHeight, -length / 2);
+		//back roof
 		glNormal3f(v4[0], v4[1], v4[2]);
-		glVertex3f(hallHalfWidth, 0, -length);
-		glVertex3f(-hallHalfWidth, 0, -length);
-		glVertex3f(-roofHalfWidth, roofHeight, -length / 2);
-		glVertex3f(roofHalfWidth, roofHeight, -length / 2);
+		glTexCoord2f(0, 0); glVertex3f(hallHalfWidth, 0, -length);
+		glTexCoord2f(1, 0); glVertex3f(-hallHalfWidth, 0, -length);
+		glTexCoord2f(0.7857, 1); glVertex3f(-roofHalfWidth, roofHeight, -length / 2);
+		glTexCoord2f(0.2143, 1); glVertex3f(roofHalfWidth, roofHeight, -length / 2);
 	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
 	//chimney
 	glTranslatef(0, roofHeight-1.5, 0);
 	glTranslatef(-roofHalfWidth+chimneyHalfWidth*2, 0, -length/2);
@@ -864,7 +904,7 @@ static void drawMarketPole(GLint halfWidth, GLint halfLen, GLint height) {
 		halfWidth, height, -halfLen, halfWidth, height, halfLen);
 	//back
 	polygoni(-4, halfWidth, 0, -halfLen, -halfWidth, 0, -halfLen,
-		halfWidth, height, -halfLen, -halfWidth, height, -halfLen);
+		-halfWidth, height, -halfLen, halfWidth, height, -halfLen);
 	//top
 	polygoni(-4, -halfWidth, height, halfLen, halfWidth, height, halfLen,
 		halfWidth, height, -halfLen, -halfWidth, height, -halfLen);
