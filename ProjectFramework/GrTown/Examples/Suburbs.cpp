@@ -116,16 +116,17 @@ SimpleHouse1::SimpleHouse1()
 {
 	color(.6f,.7f,.8f);
 }
+
 void SimpleHouse1::draw(DrawingState*)
 {
 	glColor3fv(&color.r);
 	//back
-	fetchTexture("house-front.bmp");
+	fetchTexture("house1-front.bmp");
 	glBegin(GL_POLYGON);
 		glNormal3f(0, 0, -1);
 		glTexCoord2f(0, 0); glVertex3i(-20, 0, -25);
 		glTexCoord2f(0, 1); glVertex3i(-20, 30, -25);
-		glTexCoord2f(.5, 1.5); glVertex3i(0, 45, -25);
+		glTexCoord2f(0.5, 1.5); glVertex3i(0, 45, -25);
 		glTexCoord2f(1, 1); glVertex3i(20, 30, -25);
 		glTexCoord2f(1, 0); glVertex3i(20, 0, -25);
 	glEnd();
@@ -135,27 +136,14 @@ void SimpleHouse1::draw(DrawingState*)
 		glTexCoord2f(0, 0); glVertex3i(-20, 0, 25);
 		glTexCoord2f(1, 0); glVertex3i(20, 0, 25);
 		glTexCoord2f(1, 1); glVertex3i(20, 30, 25);
-		glTexCoord2f(.5, 1.5); glVertex3i(0, 45, 25);
+		glTexCoord2f(0.5, 1.5); glVertex3i(0, 45, 25);
 		glTexCoord2f(0, 1); glVertex3i(-20, 30, 25);
 	glEnd();
 	//right
-	fetchTexture("house-side.bmp", true, false);
-	glBegin(GL_POLYGON);
-		glNormal3f(1, 0, 0);
-		glTexCoord2f(0, 0);	glVertex3i(20, 0, 25);
-		glTexCoord2f(4, 0);	glVertex3i(20, 0, -25);
-		glTexCoord2f(4, 1);	glVertex3i(20, 30, -25);
-		glTexCoord2f(0, 1);	glVertex3i(20, 30, 25);
-	glEnd();
+	fetchTexture("house1-side.bmp");
+	polygoni(-4, 20, 0, 25, 20, 0, -25, 20, 30, -25, 20, 30, 25);
 	//left
-	glBegin(GL_POLYGON);
-		glNormal3f(-1, 0, 0);
-		glTexCoord2f(0, 0);	glVertex3i(-20, 0, -25);
-		glTexCoord2f(4, 0);	glVertex3i(-20, 0, 25);
-		glTexCoord2f(4, 1);	glVertex3i(-20, 30, 25);
-		glTexCoord2f(0, 1);	glVertex3i(-20, 30, -25);
-	glEnd();
-	glBindTexture(GL_TEXTURE_2D, 0);
+	polygoni(-4, -20, 0, -25, -20, 0, 25, -20, 30, 25, -20, 30, -25);
 	//roof
 	fetchTexture("roof.bmp");
 	glColor3ub(255, 255, 255);
@@ -167,6 +155,7 @@ void SimpleHouse1::draw(DrawingState*)
 	drawChimney(2, 12);	
 }
 
+/***********************************************************************/
 //house2
 static void drawAttic(GLint halfWidth, GLint height) {
 	//front
@@ -188,12 +177,14 @@ static void drawAttic(GLint halfWidth, GLint height) {
 	fetchTexture("roof.bmp");
 	glColor3ub(255, 255, 255);
 	glBegin(GL_QUADS);
-		//
+		//left roof
+		glNormal3f(-0.7071,0.7071,0);
 		glTexCoord2f(0, 0);	glVertex3i(-halfWidth, height, -halfWidth);
 		glTexCoord2f(0.2, 0); glVertex3i(-halfWidth, height, halfWidth);
 		glTexCoord2f(0.2, 0.2); glVertex3i(0, height + 3, halfWidth);
 		glTexCoord2f(0, 0.2); glVertex3i(0, height + 3, -halfWidth);
-		//
+		//right roof
+		glNormal3f(0.7071, 0.7071, 0);
 		glTexCoord2f(0, 0);	glVertex3i(halfWidth, height, halfWidth);
 		glTexCoord2f(0.2, 0); glVertex3i(halfWidth, height, -halfWidth);
 		glTexCoord2f(0.2, 0.2); glVertex3i(0, height + 3, -halfWidth);
@@ -207,31 +198,32 @@ SimpleHouse2::SimpleHouse2()
 	color(.6f,.7f,.8f);
 	rotMatrix(transform,'Y',3.14159f/2.f);
 }
+
 void SimpleHouse2::draw(DrawingState*)
 {
 	glColor3fv(&color.r);
-	fetchTexture("house-side.bmp", true, false);
+	fetchTexture("house2-side.bmp", true, false);
 	glBegin(GL_POLYGON);
 		//front
 		glNormal3f(0,0,1);
 		glTexCoord2f(0, 0);	glVertex3i(-20, 0, 30);
-		glTexCoord2f(3, 0);	glVertex3i(20, 0, 30);
-		glTexCoord2f(3, 1);	glVertex3i(20, 30, 30);
-		glTexCoord2f(1.5, 1.5);	glVertex3i(0, 45, 30);
+		glTexCoord2f(1, 0);	glVertex3i(20, 0, 30);
+		glTexCoord2f(1, 1);	glVertex3i(20, 30, 30);
+		glTexCoord2f(0.5, 1.5);	glVertex3i(0, 45, 30);
 		glTexCoord2f(0, 1);	glVertex3i(-20, 30, 30);
 	glEnd();
 	glBegin(GL_POLYGON);
 		//back
 		glNormal3f(0, 0, -1);
 		glTexCoord2f(0, 0);	glVertex3i(20, 0, -30);
-		glTexCoord2f(3, 0);	glVertex3i(-20, 0, -30);
-		glTexCoord2f(3, 1);	glVertex3i(-20, 30, -30);
-		glTexCoord2f(1.5, 1.5);	glVertex3i(0, 45, -30);
+		glTexCoord2f(1, 0);	glVertex3i(-20, 0, -30);
+		glTexCoord2f(1, 1);	glVertex3i(-20, 30, -30);
+		glTexCoord2f(0.5, 1.5);	glVertex3i(0, 45, -30);
 		glTexCoord2f(0, 1);	glVertex3i(20, 30, -30);
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	//right
-	fetchTexture("house-front.bmp");
+	fetchTexture("house2-front.bmp");
 	polygoni(-4, 20, 0, 30, 20, 0, -30, 20, 30, -30, 20, 30, 30);
 	//left
 	polygoni(-4, -20, 0, -30, -20, 0, 30, -20, 30, 30, -20, 30, -30);
@@ -262,29 +254,20 @@ SimpleHouse3::SimpleHouse3()
 {
 	color(.6f,.7f,.8f);
 }
+
 void SimpleHouse3::draw(DrawingState*)
 {
 	glColor3fv(&color.r);
 	//front
-	fetchTexture("house-front.bmp");
+	fetchTexture("house2-front.bmp");
 	polygoni(-4, -30, 0, 20, 30, 0, 20, 30, 30, 20, -30, 30, 20);
 	//back
 	polygoni(-4, 30, 0, -20, -30, 0, -20, -30, 30, -20, 30, 30, -20);
-	fetchTexture("house-side.bmp", true, false);
-	glBegin(GL_QUADS);
-		//left
-		glNormal3f(-1, 0, 0);
-		glTexCoord2f(3, 0); glVertex3i(-30, 0, 20);
-		glTexCoord2f(3, 1); glVertex3i(-30, 30, 20);
-		glTexCoord2f(0, 1); glVertex3i(-30, 30, -20);
-		glTexCoord2f(0, 0); glVertex3i(-30, 0, -20);
-		//right
-		glNormal3f(1, 0, 0);
-		glTexCoord2f(3, 0); glVertex3i(30, 0, -20);
-		glTexCoord2f(3, 1); glVertex3i(30, 30, -20);
-		glTexCoord2f(0, 1); glVertex3i(30, 30, 20);
-		glTexCoord2f(0, 0); glVertex3i(30, 0, 20);
-	glEnd();
+	//left
+	fetchTexture("house2-side.bmp", true, false);
+	polygoni(-4, -30, 0, -20 ,- 30, 0, 20, -30, 30, 20, -30, 30, -20);
+	//right
+	polygoni(-4, 30, 0, 20, 30, 0, -20, 30, 30, -20, 30, 30, 20);
 	//roof
 	fetchTexture("roof.bmp");
 	glColor3ub(255,255, 255);
@@ -325,8 +308,8 @@ void SimpleHouse3::draw(DrawingState*)
 	drawChimney(2, 6);
 }
 
-
 /***********************************************************************/
+//town hall
 TownHall::TownHall() : GrObject("Town Hall")
 {
 }
@@ -335,9 +318,8 @@ void TownHall::draw(DrawingState*)
 {
 	GLint hallHalfWidth = 35, hallHeight = 30, length = 40, roofHeight = 15, roofHalfWidth = 20;
 	GLint chimneyHalfWidth = 2, chimneyHeight = 6;
-	GLfloat towerRadius=3.8, towerHeight =18;
+	GLfloat towerRadius = 3.8, towerHeight =18;
 
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	fetchTexture("town-hall.bmp",true,false);
 	////walls
 	glColor3ub(255, 255, 255);
@@ -367,8 +349,7 @@ void TownHall::draw(DrawingState*)
 		glTexCoord2f(0, 1); glVertex3i(-hallHalfWidth, hallHeight, -length);
 		glTexCoord2f(0, 0); glVertex3i(-hallHalfWidth, 0, -length);
 	glEnd();
-	glBindTexture(GL_TEXTURE_2D, 0);
-
+	
 	////roof
 	glTranslatef(0, hallHeight, 0);
 	fetchTexture("roof.bmp");
@@ -448,6 +429,8 @@ void TownHall::draw(DrawingState*)
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+/***********************************************************************/
+//lutheran church
 LutheranChurch::LutheranChurch() : GrObject("Lutheran Church")
 {
 }
@@ -461,14 +444,13 @@ static void drawLuthChurchTower(GLint halfWidth, GLint height) {
 
 void LutheranChurch::draw(DrawingState*)
 {
-	//glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-	glColor3ub(255,255,255);
 	GLint towerHalfWidth =8, towerHeight =80,towerTopHeight = 30;
-	GLint bodyHalfWidth = 25, bodyHeight = 20,roofHeight = 15,bodyLen=70;
+	GLint bodyHalfWidth = 25, bodyHeight = 30,roofHeight = 15,bodyLen=70;
 
 	////tower
 	//front
 	fetchTexture("lutheran-church-tower.bmp");
+	glColor3ub(255, 255, 255);
 	polygoni(-4, -towerHalfWidth, 0, towerHalfWidth, towerHalfWidth, 0, towerHalfWidth, 
 		towerHalfWidth, towerHeight, towerHalfWidth, -towerHalfWidth, towerHeight, towerHalfWidth);
 	//right
@@ -510,11 +492,11 @@ void LutheranChurch::draw(DrawingState*)
 	//front
 	glBegin(GL_POLYGON);
 		glNormal3f(0, 0, 1);
-		glTexCoord2f(1, 0); glVertex3i(bodyHalfWidth, 0, 0);
-		glTexCoord2f(1, 0.5); glVertex3i(bodyHalfWidth, bodyHeight, 0);
-		glTexCoord2f(0.5, 1); glVertex3i(0, bodyHeight + roofHeight, 0);
-		glTexCoord2f(0, 0.5); glVertex3i(-bodyHalfWidth, bodyHeight, 0);
 		glTexCoord2f(0,0); glVertex3i(-bodyHalfWidth, 0, 0);
+		glTexCoord2f(1, 0); glVertex3i(bodyHalfWidth, 0, 0);
+		glTexCoord2f(1, 1); glVertex3i(bodyHalfWidth, bodyHeight, 0);
+		glTexCoord2f(0.5, 1.5); glVertex3i(0, bodyHeight + roofHeight, 0);
+		glTexCoord2f(0, 1); glVertex3i(-bodyHalfWidth, bodyHeight, 0);
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	//back
@@ -570,6 +552,8 @@ void LutheranChurch::draw(DrawingState*)
 		0, tmpHeight + tmpRoofHeight, -bodyLen);
 }
 
+/***********************************************************************/
+//orthodox church
 OrthodoxChurch::OrthodoxChurch() : GrObject("Orthodox Church")
 {
 }
@@ -595,7 +579,6 @@ static void drawOrthoChurchPole(GLint halfWidth, GLint height) {
 }
 
 static void drawOrthoChurchTower(GLfloat radius, GLfloat height) {
-	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
 	fetchTexture("orthodox-church-tower.bmp");
 	GLUquadricObj *obj = gluNewQuadric();
 	gluQuadricTexture(obj, true);
@@ -638,12 +621,12 @@ static void drawOrthoChurchTower(GLfloat radius, GLfloat height) {
 
 void OrthodoxChurch::draw(DrawingState*)
 {
-	glColor3ub(255, 255, 255);
 	GLint outerHalfWidth = 30, outerHeight = 20, innerHalfWidth = 24, innerHeight = 18;
 
 	////outer
 	//walls
 	fetchTexture("orthodox-church-window.bmp", true, false);
+	glColor3ub(255, 255, 255);
 	glTranslatef(0, 0, -outerHalfWidth);
 	glBegin(GL_QUADS);
 		//front
@@ -769,33 +752,84 @@ void OrthodoxChurch::draw(DrawingState*)
 	drawOrthoChurchTower(innerHalfWidth*0.25, 16);
 }
 
+/***********************************************************************/
+//city gate
 CityGate::CityGate() : GrObject("City Gate")
 {
 }
 
-static void drawGityGateSingle()
+static void drawGityGatePole()
 {
+	GLUquadricObj *obj = gluNewQuadric();
+	GLfloat towerHeight = 40, towerTopHeight = 15, towerRadius = 6;
+
 	glPushMatrix();
-		glRotatef(-90, 1, 0, 0);
-		GLUquadricObj *obj = gluNewQuadric();
-		GLfloat towerHeight=30, towerTopHeight=10, towerRadius=5;
-
-		glColor3ub(175, 175, 175);
+		fetchTexture("brick.bmp");
+		gluQuadricTexture(obj, true);
+		//tower
+		glRotatef(-90, 1, 0, 0);		
+		glColor3ub(255, 255, 255);
 		gluCylinder(obj, towerRadius, towerRadius, towerHeight, 20, 10);
+		glBindTexture(GL_TEXTURE_2D, 0);
 
-		glColor3ub(200, 90, 60);
+		//cover
 		glTranslatef(0, 0, towerHeight);
+		glColor3ub(200, 90, 60);
+		gluDisk(obj, 0, towerRadius+0.5, 20, 10);
+		glColor3ub(255, 255, 255);
+		
+		fetchTexture("roof.bmp");
+		gluQuadricTexture(obj, true);
 		gluCylinder(obj, towerRadius+0.5, 0, towerTopHeight, 20, 10);
+		glBindTexture(GL_TEXTURE_2D, 0);
 	glPopMatrix();
 }
-void CityGate::draw(DrawingState*)
+
+static void drawGityGateBody()
 {
-	glTranslatef(-13, 0, 0);
-	drawGityGateSingle();
-	glTranslatef(26, 0, 0);
-	drawGityGateSingle();
+	glPushMatrix();
+		GLint halfWidth=20, bodyHeight = 23, roofHeight = 3, halfLen = 4;
+		glColor3ub(255, 255, 255);
+		fetchTexture("brick.bmp");
+		//front
+		polygoni(-4, -halfWidth, 0, halfLen, halfWidth, 0, halfLen,
+			halfWidth, bodyHeight, halfLen, -halfWidth, bodyHeight, halfLen);
+		//back
+		polygoni(-4, halfWidth, 0, -halfLen, -halfWidth, 0, -halfLen,
+			-halfWidth, bodyHeight, -halfLen, halfWidth, bodyHeight, -halfLen);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		//right
+		glColor3ub(210, 210, 210);
+		polygoni(-5, halfWidth, 0, halfLen, halfWidth, 0, -halfLen,
+			halfWidth, bodyHeight, -halfLen, halfWidth, bodyHeight+roofHeight,0, halfWidth, bodyHeight, halfLen);
+		//left
+		polygoni(-5, -halfWidth, 0, -halfLen, -halfWidth, 0, halfLen,
+			-halfWidth, bodyHeight, halfLen, -halfWidth, bodyHeight+roofHeight, 0, -halfWidth, bodyHeight, -halfLen);
+		//roof
+		fetchTexture("roof-small.bmp");
+		glColor3ub(255, 255, 255);
+		glTranslatef(0, bodyHeight, 0);
+		polygoni(-4, -halfWidth, 0, halfLen, halfWidth, 0, halfLen,
+			halfWidth, roofHeight, 0, -halfWidth, roofHeight, 0);
+		polygoni(-4, halfWidth, 0, -halfLen, -halfWidth, 0, -halfLen,
+			-halfWidth, roofHeight, 0, halfWidth, roofHeight, 0);		
+	glPopMatrix();
 }
 
+void CityGate::draw(DrawingState*)
+{
+	glTranslatef(-19, 0, 0);
+	drawGityGatePole();
+	glTranslatef(-19, 0, 0);
+	drawGityGateBody();
+	glTranslatef(57, 0, 0);
+	drawGityGatePole();
+	glTranslatef(19, 0, 0);
+	drawGityGateBody();
+}
+
+/***********************************************************************/
+//tv tower
 TVTower::TVTower() : GrObject("TV Tower")
 {
 }
@@ -813,6 +847,7 @@ void drawTVTowerPole(GLfloat radius) {
 void TVTower::draw(DrawingState* s)
 {
 	GLfloat baseHeight = 3, towerHeight = 90, middleHeight = 5, aerialHeight = 70, baseRadius = 25, towerRadius = 6, middleRadius = 12, aerialRadius = 2, aerialSectionCount = 10;
+	
 	////base
 	GLUquadricObj *obj = gluNewQuadric();
 	glColor3ub(180, 180, 180);
@@ -828,8 +863,10 @@ void TVTower::draw(DrawingState* s)
 		GLfloat mat_emissive[4] = { 0, 0, 0.5, 1.0 };
 		glMaterialfv(GL_FRONT, GL_EMISSION, mat_emissive);
 	}
+	
 	////tower
 	gluCylinder(obj, towerRadius, towerRadius*0.5, towerHeight, 20, 30);
+	
 	////middle
 	glTranslatef(0, 0, towerHeight);
 	if (lightOn) {
@@ -870,6 +907,7 @@ void TVTower::draw(DrawingState* s)
 	glTranslatef(0, 0, 3);
 	gluDisk(obj, 0, middleRadius*0.7, 20, 10);
 	glMaterialfv(GL_FRONT, GL_EMISSION, mat_emissive_none);
+	
 	////aerial
 	//base
 	glColor3ub(255, 0, 0);
@@ -887,6 +925,8 @@ void TVTower::draw(DrawingState* s)
 	}
 }
 
+/***********************************************************************/
+//indoor market
 IndoorMarket::IndoorMarket() : GrObject("Indoor Market")
 {
 }
@@ -999,7 +1039,8 @@ static void drawMarketRoom(GLint halfWidth, GLint height, GLint length, GLint ro
 
 void IndoorMarket::draw(DrawingState*)
 {
-	GLint roomHalfWidth = 25, roomHeight = 15, roomLength = 80, roofHeight = 20, conHalfWidth=5;
+	GLint roomHalfWidth = 25, roomHeight = 15, roomLength = 80, roofHeight = 20, conHalfWidth = 5; 
+
 	drawMarketRoom(roomHalfWidth,roomHeight,roomLength,roofHeight);
 	glPushMatrix();
 		glTranslatef(-roomHalfWidth-conHalfWidth, 0, 0);
@@ -1018,6 +1059,7 @@ void IndoorMarket::draw(DrawingState*)
 	glPopMatrix();
 
 }
+
 /*&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&*/
 StreetLight::StreetLight(double p) : poleZ(p)
 {
@@ -1196,7 +1238,6 @@ static int houseColors[][3] = {
 		{ 220, 220, 220 }, { 242, 155, 118 }  //red, gray
 };
 int nHouseColors = 6;
-
 
 ////////////////////////////////////////////////////////////////////////
 // draw a little suburban dream...

@@ -495,6 +495,8 @@ void Sky::draw(DrawingState * d)
 	glEnable(GL_LIGHTING);
 }
 
+/***********************************************************************/
+//hot air balloon
 HotAirBalloon::HotAirBalloon() : GrObject("Balloon")
 {	
 }
@@ -507,6 +509,8 @@ void HotAirBalloon::draw(DrawingState*) {
 	int verticalSliceCount1 = radius/verticalSliceHeight;
 	int verticalSliceCount2 = height / verticalSliceHeight;
 	GLint halfBasketWidth = 3;
+
+	////body
 	for (int i = 0; i <	horizontalSliceCount; i++) {
 		double theta1 = 2 * pi / horizontalSliceCount*i;
 		double theta2 = 2 * pi / horizontalSliceCount*(i + 1);
@@ -559,10 +563,25 @@ void HotAirBalloon::draw(DrawingState*) {
 			polygon(-4, pt1x, y1, pt1z, pt2x, y2, pt2z, pt3x, y2, pt3z, pt4x, y1, pt4z);
 		}
 	}
-	//basket
-	glTranslatef(0, -radius - height-15, 0);
-	//front
+	//threads
+	glTranslatef(0, -radius - height, 0);
+	GLUquadricObj *obj = gluNewQuadric();
 	glColor3ub(255, 255, 255);
+	glPushMatrix();
+		glRotatef(90, 1, 0, 0);
+		glTranslatef(-halfBasketWidth, -halfBasketWidth, 0);
+		gluCylinder(obj, 0.2, 0.2, 10, 10, 20);
+		glTranslatef(0, 2*halfBasketWidth, 0);
+		gluCylinder(obj, 0.2, 0.2, 10, 10, 20);
+		glTranslatef(2 * halfBasketWidth, 0, 0);
+		gluCylinder(obj, 0.2, 0.2, 10, 10, 20);
+		glTranslatef(0, -2*halfBasketWidth, 0);
+		gluCylinder(obj, 0.2, 0.2, 10, 10, 20);
+	glPopMatrix();
+
+	////basket
+	glTranslatef(0, - 10, 0);
+	//front
 	polygoni(-4, -halfBasketWidth, 0, halfBasketWidth, halfBasketWidth, 0, halfBasketWidth,
 		halfBasketWidth, 3, halfBasketWidth, -halfBasketWidth, 3, halfBasketWidth);
 	//right
@@ -574,7 +593,7 @@ void HotAirBalloon::draw(DrawingState*) {
 	//back
 	polygoni(-4, halfBasketWidth, 0, -halfBasketWidth, -halfBasketWidth, 0, -halfBasketWidth,
 		-halfBasketWidth, 3, -halfBasketWidth, halfBasketWidth, 3, -halfBasketWidth);
-	//top
+	//bottom
 	polygoni(4, -halfBasketWidth, 0, halfBasketWidth, halfBasketWidth, 0, halfBasketWidth,
 		halfBasketWidth, 0, -halfBasketWidth, -halfBasketWidth, 0, -halfBasketWidth);
 }

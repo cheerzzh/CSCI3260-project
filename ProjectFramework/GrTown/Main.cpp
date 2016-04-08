@@ -57,49 +57,49 @@ int main(int /*argc*/, char** /*argv*/)
   church1->interesting = true;
   church1->name = "St.Olav Church";
   church1->laX = 0; church1->laY = 0; church1->laZ = 0;
-  church1->lfX = -50; church1->lfY = 100; church1->lfZ = 250;
+  church1->lfX = 0; church1->lfY = 100; church1->lfZ = 250;
   add(church1, -50, 0, 100, pi / 2.f);
   
   GrObject* church2 = new OrthodoxChurch;
   church2->interesting = true;
   church2->name = "Alexander Nevsky Church";
   church2->laX = 0; church2->laY = 0; church2->laZ = 0;
-  church2->lfX = -50; church2->lfY = 100; church2->lfZ = 250;
+  church2->lfX = 0; church2->lfY = 100; church2->lfZ = 250;
   add(church2, -50, 0, 200, pi / 2.f);
 
   GrObject* gate = new CityGate;
   gate->interesting = true;
-  gate->name = "Viru Gate";
+  gate->name = "Medieval Gate";
   gate->laX = 0; gate->laY = 0; gate->laZ = 0;
-  gate->lfX = -50; gate->lfY = 100; gate->lfZ = 300;
-  add(gate, -16, 0, 400, 0);
+  gate->lfX = 0; gate->lfY = 80; gate->lfZ = -250;
+  add(gate, 100, 0, 460, pi / 2.f);
 
   GrObject* tvtower = new TVTower;
   tvtower->name = "TV Tower";
   tvtower->interesting = true;
-  tvtower->laX = 0; tvtower->laY = 0; tvtower->laZ = 0;
-  tvtower->lfX = -50; tvtower->lfY = 100; tvtower->lfZ = 300;
+  tvtower->laX = 0; tvtower->laY = 80; tvtower->laZ = 0;
+  tvtower->lfX = -50; tvtower->lfY = 150; tvtower->lfZ = 300;
   add(tvtower, -100, 0, 300, pi / 2.f);
 
   GrObject* market = new IndoorMarket;
   market->name = "Central Market";
   market->interesting = true;
   market->laX = 0; market->laY = 0; market->laZ = 0;
-  market->lfX = -50; market->lfY = 100; market->lfZ = 300;
-  add(market, -50, 0, 450, pi / 2.f);
+  market->lfX = 0; market->lfY = 100; market->lfZ = 300;
+  add(market, -50, 0, 460, pi / 2.f);
 
   GrObject* townhall = new TownHall;
   townhall->name = "Town Hall";
   townhall->interesting = true;
   townhall->laX = 0; townhall->laY = 0; townhall->laZ = 0;
-  townhall->lfX = -50; townhall->lfY = 100; townhall->lfZ = 300;
+  townhall->lfX = 0; townhall->lfY = 100; townhall->lfZ = 300;
   add(townhall, -50, 0, 620, pi / 2.f);
 
   GrObject* balloon = new HotAirBalloon;
   balloon->name = "Balloon";
   balloon->interesting = true;
   balloon->laX = 0; balloon->laY = 0; balloon->laZ = 0;
-  balloon->lfX = -50; balloon->lfY = 100; balloon->lfZ = 300;
+  balloon->lfX = 50; balloon->lfY = 100; balloon->lfZ = 300;
   add(balloon, -50, 0, 700, pi / 2.f);
 
   // *****************************************************************

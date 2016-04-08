@@ -30,7 +30,6 @@ public:
   virtual void draw(DrawingState*);
 };
 
-
 // three very basic houses.
 // only thing that makes them at all interesting is that they have
 // windows slapped onto them using texture
@@ -40,12 +39,14 @@ public:
   Color color;
   virtual void draw(DrawingState*);
 };
+
 class SimpleHouse2 : public GrObject {
 public:
   SimpleHouse2();
   Color color;
   virtual void draw(DrawingState*);
 };
+
 class SimpleHouse3 : public GrObject {
 public:
   SimpleHouse3();
@@ -53,7 +54,6 @@ public:
   virtual void draw(DrawingState*);
 };
 
-//
 class TownHall : public GrObject {
 public:
 	TownHall();
@@ -71,6 +71,7 @@ public:
 	OrthodoxChurch();
 	virtual void draw(DrawingState*);
 };
+
 class CityGate : public GrObject {
 public:
 	CityGate();
