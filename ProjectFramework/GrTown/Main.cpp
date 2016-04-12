@@ -107,6 +107,7 @@ int main(int /*argc*/, char** /*argv*/)
   //  Make your town here
 
   // add snowman 
+  /*
   GrObject* snowman1 = new SnowMan(-100, 0, -50, 30);
   add(snowman1);
   snowman1->name = "snowman1";
@@ -116,7 +117,7 @@ int main(int /*argc*/, char** /*argv*/)
   snowman1->interesting = true;
   snowman1->laX = 0; snowman1->laY = 0; snowman1->laZ = 0;
   snowman1->lfX = 70; snowman1->lfY = 50; snowman1->lfZ = 0;
-
+  */
   // first, some really simple things
 
   // cubes are particularly easy since they set their own position
@@ -161,12 +162,25 @@ int main(int /*argc*/, char** /*argv*/)
   GrObject* fw;
  
   Color colors[] = { Color(1.0, 0.0, 0.0), Color(0.0, 1.0, 0.0), Color(0.0, 1.0, 1.0), Color(1.0, 1.0, 0.0), Color(1.0, 0.0, 1.0) };
+  /*
   for (int i = 0; i < 5; i++) {
 	  fw = new Fireworks(colors[rand() % (sizeof(colors) / sizeof(Color))]);
 	  fw->interesting = false;
 	  add(fw, rand() % 2000, rand() % 100 + 100, rand() % 1000);
 	  new emitFireWork(fw, rand() % 5000);
   }
+  */
+
+  fw = new Fireworks(colors[1]);
+  fw->interesting = false;
+  add(fw,-100, 200, -200);
+  new emitFireWork(fw, 3000);
+
+  GrObject* snow = new Snow(Color(1.0, 1.0, 1.0));
+  add(snow, -100, 50, -100);
+  snow->interesting = true;
+  snow->laX = 0; f1->laY = 0; f1->laZ = 0;
+  snow->lfX = 70; f1->lfY = 50; f1->lfZ = 0;
 
     ////////////////////////////////////////////////////////////////////////
   // now to make a real town!

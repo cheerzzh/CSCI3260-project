@@ -114,6 +114,21 @@ public:
 	void evolute();
 };
 
+class Snow : public GrObject{
+public:
+	std::deque<Particle> particles;
+	int max_particles, gen_rate, life,evl_rate, gen_evl;
+	bool start;
+	int width;
+	glm::vec3 g;
+	Color color;
+	clock_t last_gen_clock, last_evl_clock;
+	Snow(Color color);
+
+	virtual void draw(DrawingState*);
+	void gen_particles();
+	void evolute();
+};
 
 class HotAirBalloon : public GrObject {
 public:

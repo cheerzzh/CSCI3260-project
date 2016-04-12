@@ -64,12 +64,12 @@ void Fountain::gen_particles() {
 	}
 	double t = (double)(c - last_gen_clock) / CLOCKS_PER_SEC;
 	for (int gen = (int)(t * gen_rate); gen > 0 && particles.size() < max_particles; gen--) {
-		particles.push_back(Particle(life, rand_water_speed(1,0.9), color, glm::vec3(0.0, 0.0, 0.0), 1.0f, (float)rand() / RAND_MAX * 0.15 + 0.1, (float)rand() / RAND_MAX * 360));
+		particles.push_back(Particle(life, rand_water_speed(1.5,1.1), color, glm::vec3(0.0, 0.0, 0.0), 1.0f, (float)rand() / RAND_MAX * 0.15 + 0.1, (float)rand() / RAND_MAX * 360));
 		last_gen_clock = c;
 	}
 
 	for (int gen = (int)(t * gen_rate); gen > 0 && particles_layer2.size() < max_particles; gen--) {
-		particles_layer2.push_back(Particle(life, rand_water_speed(0.3,1.3), color, glm::vec3(0.0, 0.0, 0.0), 1.0f, (float)rand() / RAND_MAX * 0.15 + 0.1, (float)rand() / RAND_MAX * 360));
+		particles_layer2.push_back(Particle(life, rand_water_speed(0.3,1.5), color, glm::vec3(0.0, 0.0, 0.0), 1.0f, (float)rand() / RAND_MAX * 0.15 + 0.1, (float)rand() / RAND_MAX * 360));
 		last_gen_clock = c;
 	}
 }
@@ -185,7 +185,7 @@ void Fireworks::gen_particles() {
 	if (evl > 0) last_gen_clock = c;
 	for (; evl > 0 && gen_evl > 0; evl--, gen_evl--) {
 		for (int gen = 0; gen < gen_rate && particles.size() < max_particles; gen++) {
-			particles.push_back(Particle(life, rand_fire_speed(), color, glm::vec3(0.0, 0.0, 0.0), 0.1f, (float)rand() / RAND_MAX * 0.2 + 0.2, (float)rand() / RAND_MAX * 360));
+			particles.push_back(Particle(life, rand_fire_speed(), color, glm::vec3(0.0, 0.0, 0.0), 0.05f, (float)rand() / RAND_MAX * 0.2 + 0.2, (float)rand() / RAND_MAX * 360));
 		}
 	}
 }
@@ -196,10 +196,11 @@ void Fireworks::evolute() {
 	for (int evl = (int)(t * evl_rate); evl > 0; evl--) {
 		for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
 			it->pos += it->speed;
-			glm::vec3 a = it->weight * g;
+			glm::vec3 a = it->weight * g; 
 			a *= t;
 			it->speed += a;
-			it->color.a *= 0.98;
+			it->color.a *= 0.98; 
+			//it->color.r *= 0.98;
 		}
 		last_evl_clock = c;
 	}
@@ -218,8 +219,100 @@ void Fireworks::draw(DrawingState *d) {
 	}
 }
 
-//================
+glm::vec3 rand_snow_speed(float scale) {
+	 
+	glm::vec3 v(0.0f, -1.0f * scale , 0.0f);
+	//v = glm::rotate(v, (float)rand() / RAND_MAX * 360, glm::vec3(1.0f, 0.0f, 0.0f));
+	//v = glm::rotate(v, (float)rand() / RAND_MAX * 360, glm::vec3(0.0f, 1.0f, 0.0f));
+	return v;
+}
 
+glm::vec3 rand_snow_position(int width){
+	float pos1 = (rand() / RAND_MAX  -0.5) *width;
+	float pos2 = (rand() / RAND_MAX  -0.5) *width;
+	glm::vec3 v(pos1, 0.0f, pos2);
+
+	return v;
+
+}
+Snow::Snow(Color _color) : GrObject("Snow"), color(_color) {
+	color.a = 1.0f;
+	max_particles = 10000;
+	gen_rate = 100;
+	life = 5;
+	evl_rate = 30;
+	gen_evl = 0;
+	width = 10;
+	//height = 100;
+	g = glm::vec3(0.0f, -1.0f, 0.0f);
+	start = false;
+	last_gen_clock = last_evl_clock = clock();
+}
+
+/*
+void Snow::gen_particles() {
+	clock_t c = clock();
+	while (!particles.empty() && particles.front().birth + particles.front().life * CLOCKS_PER_SEC <= c) {
+		particles.pop_front();
+	}
+	double t = (double)(c - last_gen_clock) / CLOCKS_PER_SEC;
+	int evl = (int)(t * evl_rate);
+	if (evl > 0) last_gen_clock = c;
+	for (; evl > 0 && gen_evl > 0; evl--, gen_evl--) {
+		for (int gen = 0; gen < gen_rate && particles.size() < max_particles; gen++) {
+			particles.push_back(Particle(life, rand_water_speed(1,1), color, glm::vec3(0.0, 0.0, 0.0), 1.0f, (float)rand() / RAND_MAX * 0.2 + 0.2, (float)rand() / RAND_MAX * 360));
+		}
+	}
+}
+*/
+
+void Snow::gen_particles() {
+	clock_t c = clock();
+	// end life of old particles
+	while (!particles.empty() && particles.front().birth + particles.front().life * CLOCKS_PER_SEC <= c) {
+		particles.pop_front();
+	}
+
+	double t = (double)(c - last_gen_clock) / CLOCKS_PER_SEC;
+	for (int gen = (int)(t * gen_rate); gen > 0 && particles.size() < max_particles; gen--) {
+		particles.push_back(Particle(life, rand_snow_speed(1), color, rand_snow_position(this->width), 0.01f, (float)rand() / RAND_MAX * 0.08 + 0.05, (float)rand() / RAND_MAX * 360));
+		last_gen_clock = c;
+	}
+}
+
+
+void Snow::evolute() {
+	clock_t c = clock();
+	double t = (double)(c - last_evl_clock) / CLOCKS_PER_SEC;
+	for (int evl = (int)(t * evl_rate); evl > 0; evl--) {
+		for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
+			it->pos += it->speed;
+			glm::vec3 a = it->weight * g;
+			a *= t;
+			it->speed += a;
+			// add random shift
+
+			it->color.a *= 0.98;
+			//it->color.r *= 0.98;
+		}
+		last_evl_clock = c;
+	}
+}
+
+void Snow::draw(DrawingState *d) {
+	/*
+	if ((d->timeOfDay > 4 && d->timeOfDay < 20)) return;
+	if (start) {
+		gen_evl = 3;
+		start = false;
+	}
+	*/
+	this->gen_particles();
+	this->evolute();
+	for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
+		it->draw(d);
+	}
+}
 
 SnowMan::SnowMan(float x, float y, float z, float size)
 {
