@@ -224,26 +224,29 @@ glm::vec3 rand_snow_speed(float scale) {
 	glm::vec3 v(0.0f, -1.0f * scale , 0.0f);
 	//v = glm::rotate(v, (float)rand() / RAND_MAX * 360, glm::vec3(1.0f, 0.0f, 0.0f));
 	//v = glm::rotate(v, (float)rand() / RAND_MAX * 360, glm::vec3(0.0f, 1.0f, 0.0f));
+	//v = glm::rotate(v, ((float)rand() / RAND_MAX * 10 + 10) * direction, glm::vec3(1.0f, 0.0f, 0.0f));
+	// rotate to simulate wind direc
 	return v;
 }
 
 glm::vec3 rand_snow_position(int width){
-	float pos1 = (rand() / RAND_MAX  -0.5) *width;
-	float pos2 = (rand() / RAND_MAX  -0.5) *width;
+	float pos1 = ((float)rand() / RAND_MAX  -0.5) *width;
+	float pos2 = ((float)rand() / RAND_MAX  -0.5) *width;
 	glm::vec3 v(pos1, 0.0f, pos2);
 
 	return v;
 
 }
-Snow::Snow(Color _color) : GrObject("Snow"), color(_color) {
+Snow::Snow(Color _color,int _width) : GrObject("Snow"), color(_color),width(_width) {
 	color.a = 1.0f;
-	max_particles = 10000;
-	gen_rate = 100;
-	life = 5;
+	max_particles = 5000;
+	gen_rate = 500;
+	life = 15;
 	evl_rate = 30;
 	gen_evl = 0;
-	width = 10;
+	//width = 150;
 	//height = 100;
+	random_shift_intensity = 0.35;
 	g = glm::vec3(0.0f, -1.0f, 0.0f);
 	start = false;
 	last_gen_clock = last_evl_clock = clock();
@@ -275,7 +278,7 @@ void Snow::gen_particles() {
 
 	double t = (double)(c - last_gen_clock) / CLOCKS_PER_SEC;
 	for (int gen = (int)(t * gen_rate); gen > 0 && particles.size() < max_particles; gen--) {
-		particles.push_back(Particle(life, rand_snow_speed(1), color, rand_snow_position(this->width), 0.01f, (float)rand() / RAND_MAX * 0.08 + 0.05, (float)rand() / RAND_MAX * 360));
+		particles.push_back(Particle(life, rand_snow_speed(1), color, rand_snow_position(this->width), 0.001f, (float)rand() / RAND_MAX * 0.15 + 0.12, (float)rand() / RAND_MAX * 360));
 		last_gen_clock = c;
 	}
 }
@@ -288,11 +291,11 @@ void Snow::evolute() {
 		for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
 			it->pos += it->speed;
 			glm::vec3 a = it->weight * g;
+			glm::vec3 random_v(((float)rand() / RAND_MAX -0.5)* random_shift_intensity, 0.0f, ((float)rand() / RAND_MAX -0.5)* random_shift_intensity); // add random shift
+			a += random_v;
 			a *= t;
 			it->speed += a;
-			// add random shift
-
-			it->color.a *= 0.98;
+			//it->color.a *= 0.99;
 			//it->color.r *= 0.98;
 		}
 		last_evl_clock = c;
@@ -300,13 +303,7 @@ void Snow::evolute() {
 }
 
 void Snow::draw(DrawingState *d) {
-	/*
-	if ((d->timeOfDay > 4 && d->timeOfDay < 20)) return;
-	if (start) {
-		gen_evl = 3;
-		start = false;
-	}
-	*/
+	if ((d->timeOfDay < 4 && d->timeOfDay > 20)) return;
 	this->gen_particles();
 	this->evolute();
 	for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {

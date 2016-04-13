@@ -120,10 +120,11 @@ public:
 	int max_particles, gen_rate, life,evl_rate, gen_evl;
 	bool start;
 	int width;
+	double random_shift_intensity;
 	glm::vec3 g;
 	Color color;
 	clock_t last_gen_clock, last_evl_clock;
-	Snow(Color color);
+	Snow(Color color,int width);
 
 	virtual void draw(DrawingState*);
 	void gen_particles();
