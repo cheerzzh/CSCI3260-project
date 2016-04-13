@@ -171,7 +171,7 @@ int main(int /*argc*/, char** /*argv*/)
   }
   */
 
-  fw = new Fireworks(colors[1]);
+  fw = new Fireworks(Color(0.0, 1.0, 0.0), Color(1.0f, 0.0f, 0.0f), Color(1.0f, 0.0f, 1.0f));
   fw->interesting = false;
   add(fw,-100, 200, -200);
   new emitFireWork(fw, 3000);

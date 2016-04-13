@@ -103,12 +103,11 @@ public:
 	int max_particles, gen_rate, life;
 	int evl_rate;
 	int gen_evl;
-	bool start;
+	bool start, color1_has_reach,color2_has_reach;
 	glm::vec3 g;
-	Color color;
+	Color color,end_color,end_color_2;
 	clock_t last_gen_clock, last_evl_clock;
-	Fireworks(Color color);
-
+	Fireworks(Color color1,Color color2, Color color3);
 	virtual void draw(DrawingState*);
 	void gen_particles();
 	void evolute();

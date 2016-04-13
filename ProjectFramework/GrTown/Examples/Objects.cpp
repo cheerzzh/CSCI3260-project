@@ -163,8 +163,10 @@ glm::vec3 rand_fire_speed() {
 	return v;
 }
 
-Fireworks::Fireworks(Color _color) : GrObject("Fireworks"), color(_color) {
+Fireworks::Fireworks(Color _color1, Color _color2, Color _color3) : GrObject("Fireworks"), color(_color1),end_color(_color2),end_color_2(_color3) {
 	color.a = 1.0f;
+	//end_color = Color(1.0f, 0.0f, 0.0f);
+	//end_color_2 = Color(0.0f, 0.0f, 1.0f);
 	max_particles = 10000;
 	gen_rate = 100;
 	life = 5;
@@ -172,6 +174,8 @@ Fireworks::Fireworks(Color _color) : GrObject("Fireworks"), color(_color) {
 	gen_evl = 0;
 	g = glm::vec3(0.0f, -1.0f, 0.0f);
 	start = false;
+	color1_has_reach = false;
+	color2_has_reach = false;
 	last_gen_clock = last_evl_clock = clock();
 }
 
@@ -190,6 +194,14 @@ void Fireworks::gen_particles() {
 	}
 }
 
+bool colors_are_similar(Color c1, Color c2,float tolerance){
+	// if the difference of r,g,b component is within tolerance
+	if ((abs(c1.r - c2.r) <= tolerance) && (abs(c1.g - c2.g) <= tolerance) && (abs(c1.b - c2.b) <= tolerance)){
+		return true;
+	}
+	return false;
+}
+
 void Fireworks::evolute() {
 	clock_t c = clock();
 	double t = (double)(c - last_evl_clock) / CLOCKS_PER_SEC;
@@ -199,7 +211,40 @@ void Fireworks::evolute() {
 			glm::vec3 a = it->weight * g; 
 			a *= t;
 			it->speed += a;
-			it->color.a *= 0.98; 
+
+			// change the color
+			float r_diff = end_color.r - color.r;
+			float g_diff = end_color.g - color.g;
+			float b_diff = end_color.b - color.b;
+
+			float r_diff_1 = end_color_2.r - end_color.r;
+			float g_diff_1 = end_color_2.g - end_color.g;
+			float b_diff_1 = end_color_2.b - end_color.b;
+
+			// update color if not reach target color 1
+			if(!colors_are_similar(it->color, end_color, 0.001)){
+				it->color.r += r_diff / 30;
+				it->color.g += g_diff / 30;
+				it->color.b += b_diff / 30;
+			}
+			else{
+				//std::cout << "color1 reached"<< std::endl;
+				color1_has_reach = true;
+			}
+			// shift to color2
+			
+			if (color1_has_reach){
+				if (!colors_are_similar(it->color, end_color_2, 0.001)){
+					it->color.r += r_diff_1 / 15;
+					it->color.g += g_diff_1 / 15;
+					it->color.b += b_diff_1 / 15;
+				}
+
+			}
+			
+
+	
+			it->color.a *= 0.99; 
 			//it->color.r *= 0.98;
 		}
 		last_evl_clock = c;
@@ -211,8 +256,10 @@ void Fireworks::draw(DrawingState *d) {
 	if (start) {
 		gen_evl = 3;
 		start = false;
+		this->color1_has_reach = false;
 	}
 	this->gen_particles();
+	
 	this->evolute();
 	for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
 		it->draw(d);
@@ -303,7 +350,7 @@ void Snow::evolute() {
 }
 
 void Snow::draw(DrawingState *d) {
-	if ((d->timeOfDay < 4 && d->timeOfDay > 20)) return;
+	if ((d->timeOfDay < 4 || d->timeOfDay > 20)) return;
 	this->gen_particles();
 	this->evolute();
 	for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
