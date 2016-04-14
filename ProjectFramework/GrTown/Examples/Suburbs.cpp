@@ -309,6 +309,169 @@ void SimpleHouse3::draw(DrawingState*)
 }
 
 /***********************************************************************/
+//multitexture house
+MultiTextureHouse::MultiTextureHouse()
+{
+}
+
+static void drawWoodPole(GLfloat radius, GLfloat height) {
+	GLUquadricObj *obj = gluNewQuadric();
+	glPushMatrix();
+		glRotatef(-90, 1, 0, 0);
+		gluCylinder(obj, radius, radius, height, 10, 20);
+	glPopMatrix();
+}
+
+static void drawWoodFence(GLfloat width, GLfloat height, bool left, bool right) {
+	GLUquadricObj *obj = gluNewQuadric();
+	int poleCount = (int)((width-1) / 3)-1;
+	//top
+	glPushMatrix();
+		glTranslatef(-0.5, height, 0);
+		glRotatef(-90, 0, 0, 1);
+		drawWoodPole(0.5, width);
+	glPopMatrix();
+	//left
+	if (left) drawWoodPole(0.5, height);
+	//middle
+	for (int i = 0; i < poleCount; i++) {
+		glTranslatef(3, 0, 0);
+		drawWoodPole(0.5, height);
+	}
+	//right
+	if (right) {
+		glTranslatef(3, 0, 0);
+		drawWoodPole(0.5, height);	}	
+}
+
+void MultiTextureHouse::draw(DrawingState*)
+{
+	GLint hallHalfWidth = 20, hallHeight = 25, length = 40, frontLen = 13, roofHeight = 16;
+	
+	Texture* wallTex = fetchTexture("wood.bmp",true,true);
+	Texture* windowTex = fetchTexture("house1-front.bmp");
+	glActiveTextureARB(GL_TEXTURE0_ARB);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, wallTex->texName);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_EXT);
+	glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_EXT, GL_MODULATE);
+		
+	glActiveTextureARB(GL_TEXTURE1_ARB);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, windowTex->texName);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_COMBINE_EXT);
+	glTexEnvf(GL_TEXTURE_ENV, GL_COMBINE_RGB_EXT, GL_MODULATE);
+
+	////walls
+	glColor3ub(255, 255, 255);
+	glBegin(GL_QUADS);
+		//front
+		glNormal3f(0, 0, 1);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0); glVertex3i(hallHalfWidth, 0, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0.5); glVertex3i(hallHalfWidth, hallHeight, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0.5); glVertex3i(-hallHalfWidth, hallHeight, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0); glVertex3i(-hallHalfWidth, 0, 0);
+	glEnd();
+
+	windowTex = fetchTexture("house1-side.bmp");
+	glActiveTextureARB(GL_TEXTURE1_ARB);
+	glEnable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, windowTex->texName);
+
+	glBegin(GL_QUADS);
+		//right
+		glNormal3f(1, 0, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0); glVertex3i(hallHalfWidth, 0, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0); glVertex3i(hallHalfWidth, 0, -length);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0.5); glVertex3i(hallHalfWidth, hallHeight, -length);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0.5); glVertex3i(hallHalfWidth, hallHeight, 0);
+		//back
+		glNormal3f(0, 0, -1);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0); glVertex3i(hallHalfWidth, 0, -length);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0); glVertex3i(-hallHalfWidth, 0, -length);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0.5); glVertex3i(-hallHalfWidth, hallHeight, -length);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0.5); glVertex3i(hallHalfWidth, hallHeight, -length);
+		//left
+		glNormal3f(-1, 0, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0);  glVertex3i(-hallHalfWidth, 0, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0.5); glVertex3i(-hallHalfWidth, hallHeight, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0.5); glVertex3i(-hallHalfWidth, hallHeight, -length);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0); glVertex3i(-hallHalfWidth, 0, -length);
+	glEnd();
+	glActiveTexture(GL_TEXTURE0);
+	glEnable(GL_TEXTURE_2D);
+	glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
+	
+	fetchTexture("wood.bmp", true, true);
+	glBegin(GL_TRIANGLES);
+		//front top
+		glNormal3f(0, 0, 1);
+		glTexCoord2f( 2, 0);  glVertex3i(hallHalfWidth, hallHeight, 0);
+		glTexCoord2f(1, 3); glVertex3i(0, hallHeight + roofHeight, 0);
+		glTexCoord2f(0, 0); glVertex3i(-hallHalfWidth, hallHeight, 0);
+		//back top
+		glNormal3f(0, 0, -1);
+		glTexCoord2f(2, 0);  glVertex3i(-hallHalfWidth, hallHeight, -length);
+		glTexCoord2f(1, 3); glVertex3i(0, hallHeight + roofHeight, -length);
+		glTexCoord2f(0, 0); glVertex3i(hallHalfWidth, hallHeight, -length);
+	glEnd();
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	////front parts
+	glColor3ub(234, 166, 100);
+	//floor
+	polygoni(-4, -hallHalfWidth, 1, frontLen, hallHalfWidth, 1, frontLen, hallHalfWidth, 1, 0, -hallHalfWidth, 1, 0);
+	polygoni(-4, -hallHalfWidth, 0, frontLen, hallHalfWidth, 0, frontLen, hallHalfWidth, 1, frontLen, -hallHalfWidth, 1, frontLen);
+	polygoni(-4, -hallHalfWidth, 0, 0, -hallHalfWidth, 0, frontLen, -hallHalfWidth, 1, frontLen, -hallHalfWidth, 1, 0);
+	polygoni(-4, hallHalfWidth, 0, frontLen, hallHalfWidth, 0, 0, hallHalfWidth, 1, 0, hallHalfWidth, 1, frontLen);
+	glTranslatef(0, 1, 0);
+	//front fence
+	glPushMatrix();
+		glTranslatef(-hallHalfWidth+1, 0, frontLen - 1);
+		drawWoodPole(0.8, hallHeight+1);
+		drawWoodFence(hallHalfWidth*0.8, 8, false, true);
+	glPopMatrix();
+	glPushMatrix();
+		glTranslatef(hallHalfWidth - 1, 0, frontLen - 1);
+		drawWoodPole(0.8, hallHeight + 1);
+		glTranslatef(-hallHalfWidth*0.8, 0, 0);
+		drawWoodFence(hallHalfWidth*0.8, 8, true, false);
+	glPopMatrix();
+	//left fence
+	glPushMatrix();
+		glTranslatef(-hallHalfWidth + 1, 0, 0);
+		glRotatef(-90, 0, 1, 0);
+		drawWoodFence(frontLen-1, 8, false, false);
+	glPopMatrix();
+	//left fence
+	glPushMatrix();
+		glTranslatef(hallHalfWidth - 1, 0, frontLen-1);
+		glRotatef(90, 0, 1, 0);
+		drawWoodFence(frontLen-1, 8, false, false);
+	glPopMatrix();
+
+	////roof
+	//layer 1
+	glTranslatef(0, hallHeight-1, 0);
+	polygoni(-4, -hallHalfWidth, 0, -length, -hallHalfWidth, 0, frontLen, 0, roofHeight, frontLen, 0, roofHeight, -length);
+	polygoni(-4, hallHalfWidth, 0, frontLen, hallHalfWidth, 0, -length, 0, roofHeight, -length, 0, roofHeight, frontLen);
+	//layer 2
+	glTranslatef(0, 2, 0);
+	polygoni(-4, -hallHalfWidth, 0, -length, -hallHalfWidth, 0, frontLen, 0, roofHeight, frontLen, 0, roofHeight, -length);
+	polygoni(-4, hallHalfWidth, 0, frontLen, hallHalfWidth, 0, -length, 0, roofHeight, -length, 0, roofHeight, frontLen);
+	glTranslatef(0, -2, 0);
+	//connection
+	polygoni(-4, -hallHalfWidth, 0, frontLen, 0, roofHeight, frontLen, 0, roofHeight + 2, frontLen, -hallHalfWidth, 2, frontLen);
+	polygoni(-4, 0, roofHeight, frontLen, hallHalfWidth, 0, frontLen, hallHalfWidth, 2, frontLen, 0, 2 + roofHeight, frontLen);
+	polygoni(-4, -hallHalfWidth, 0, -length, -hallHalfWidth, 0, frontLen, -hallHalfWidth, 2, frontLen, -hallHalfWidth, 2, -length);
+	polygoni(-4, hallHalfWidth, 0, frontLen, hallHalfWidth, 0, -length, hallHalfWidth, 2, -length, hallHalfWidth, 2, frontLen);
+	polygoni(4, -hallHalfWidth, 0, -length, 0, roofHeight, -length, 0, roofHeight + 2, -length, -hallHalfWidth, 2, -length);
+	polygoni(4, 0, roofHeight, -length, hallHalfWidth, 0, -length, hallHalfWidth, 2, -length, 0, 2 + roofHeight, -length);
+	
+}
+
+
+/***********************************************************************/
 //town hall
 TownHall::TownHall() : GrObject("Town Hall")
 {

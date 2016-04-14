@@ -96,12 +96,27 @@ int main(int /*argc*/, char** /*argv*/)
   townhall->lfX = 0; townhall->lfY = 100; townhall->lfZ = 300;
   add(townhall, -50, 0, 620, pi / 2.f);
 
-  GrObject* balloon = new HotAirBalloon;
-  balloon->name = "Balloon";
-  balloon->interesting = true;
-  balloon->laX = 0; balloon->laY = 0; balloon->laZ = 0;
-  balloon->lfX = 50; balloon->lfY = 100; balloon->lfZ = 300;
-  add(balloon, -50, 0, 700, pi / 2.f);
+  GrObject* woodhouse = new MultiTextureHouse;
+  woodhouse->name = "Sauna House";
+  woodhouse->interesting = true;
+  woodhouse->laX = 0; woodhouse->laY = 0; woodhouse->laZ = 0;
+  woodhouse->lfX = -80; woodhouse->lfY = 100; woodhouse->lfZ = 300;
+  add(woodhouse, -60, 0, 890, pi / 2.f);
+
+  GrObject* balloon1 = new HotAirBalloon;
+  balloon1->name = "Balloon-1";
+  add(balloon1, 200, 60, 100, 0);
+  new RandomFloat(balloon1, 30);
+
+  GrObject* balloon2 = new HotAirBalloon;
+  balloon2->name = "Balloon-2";
+  add(balloon2, 600, 60, 50, 0);
+  new RandomFloat(balloon2, 30);
+
+  GrObject* balloon3 = new HotAirBalloon;
+  balloon3->name = "Balloon-3";
+  add(balloon3, 200, 60, 500, 0);
+  new RandomFloat(balloon3, 30);
 
   // *****************************************************************
   //  Make your town here

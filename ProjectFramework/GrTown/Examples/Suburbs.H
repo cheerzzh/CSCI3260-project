@@ -54,6 +54,12 @@ public:
   virtual void draw(DrawingState*);
 };
 
+class MultiTextureHouse : public GrObject {
+public:
+	MultiTextureHouse();
+	virtual void draw(DrawingState*);
+};
+
 class TownHall : public GrObject {
 public:
 	TownHall();

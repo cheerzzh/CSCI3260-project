@@ -136,10 +136,4 @@ public:
 	virtual void draw(DrawingState*);
 };
 
-class Pedestrian : public GrObject {
-public:
-	Pedestrian();
-	virtual void draw(DrawingState*);
-};
-
 

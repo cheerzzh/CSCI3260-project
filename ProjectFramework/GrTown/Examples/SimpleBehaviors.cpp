@@ -84,3 +84,31 @@ void emitFireWork::simulateUntil(unsigned long t)
 	}
 	lastV = t;
 }
+
+RandomFloat::RandomFloat(GrObject* o, int v) : Behavior(o), vel(v)
+{
+	dx = 1;
+	dz = 1;
+}
+void RandomFloat::simulateUntil(unsigned long t)
+{
+	//original position
+	float x = owner->transform[3][0];
+	float y = owner->transform[3][1];
+	float z = owner->transform[3][2];
+	if (x > 1000) dx = -1;
+	if (x < 0) dx = 1;
+	if (z > 700) dz = -1;
+	if (z < 0) dz = 1;
+
+	unsigned long dt = t - lastV;	// how long since last update
+	float secs = ((float)dt) / 1000;	// convert ms to sec
+	//translation
+	float tx = secs*(rand() % vel)*dx; 
+	float tz = secs*(rand() % vel)*dz;
+	//new position
+	owner->transform[3][0] = x+tx;
+	owner->transform[3][2] = z+tz;
+
+	lastV = t;
+}

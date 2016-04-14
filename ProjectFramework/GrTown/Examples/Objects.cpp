@@ -636,10 +636,12 @@ void Sky::draw(DrawingState * d)
 //hot air balloon
 HotAirBalloon::HotAirBalloon() : GrObject("Balloon")
 {	
+	ridable = 1;
+	rideAbove = 60;
 }
 
 void HotAirBalloon::draw(DrawingState*) {
-	glTranslatef(0, 100, 0);
+	glTranslatef(0, 80, 0);
 	double radius = 20, height = 30;
 	double verticalSliceHeight = 2;
 	int horizontalSliceCount = 12;

@@ -50,3 +50,11 @@ public:
 	virtual void simulateUntil(unsigned long);
 };
 
+class RandomFloat :public Behavior{
+public:
+	RandomFloat(GrObject* owner,int vel = 10);
+	int vel;
+	int dx, dz;
+	virtual void simulateUntil(unsigned long);
+};
+
