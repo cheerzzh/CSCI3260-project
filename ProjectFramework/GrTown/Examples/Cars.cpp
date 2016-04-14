@@ -1,8 +1,6 @@
 // cars.cpp - implementation of simple types of cars
 // ============ TODO2: Complete this file to make it look natural ===============
 
-
-
 #include "../GrTown_PCH.H"
 #include "../DrawUtils.H"
 #include "Utilities/Texture.H"
@@ -17,10 +15,10 @@ struct CarColors {
 	int r,g,b;
 };
 CarColors cc[] = {
-	{"red",220,30,30},
-	{"white",225,225,225},
-	{"green",30,225,30},
-	{"blue",30,30,225},
+	{"red",240,50,60},
+	{"white",255,255,255},
+	{"green",179,212,101},
+	{"blue",126,206,244},
 	{"yellow",225,225,30}
 };
 const int nCarCols = 5;
@@ -126,32 +124,31 @@ static void drawWheel2(float radius, float width)
 
 void Car::draw(DrawingState* d)
 {
+	// Draw four wheel 
+	glColor3f(.1f,.1f,.1f);
+	glPushMatrix();
+		glTranslatef(w-.5f,h,f-h);
+		drawWheel(h,1);
+	glPopMatrix();
+	glPushMatrix();
+		glTranslatef(w-.5f,h,f+r-h-1);
+		drawWheel(h,1);
+	glPopMatrix();
 
-  // Draw four wheel 
-  glColor3f(.1f,.1f,.1f);
-  glPushMatrix();
-	  glTranslatef(w-.5f,h,f-h);
-	  drawWheel(h,1);
-  glPopMatrix();
-  glPushMatrix();
-	  glTranslatef(w-.5f,h,f+r-h-1);
-	  drawWheel(h,1);
-  glPopMatrix();
+	glPushMatrix();
+		glTranslatef(-w+.5f,h,f-h);
+		glRotatef(180,0,1,0);
+		drawWheel(h,1);
+	glPopMatrix();
+	glPushMatrix();
+		glTranslatef(-w+.5f,h,f+r-h-1);
+		glRotatef(180,0,1,0);
+		drawWheel(h,1);
+	glPopMatrix();
 
-  glPushMatrix();
-	  glTranslatef(-w+.5f,h,f-h);
-	  glRotatef(180,0,1,0);
-	  drawWheel(h,1);
-  glPopMatrix();
-  glPushMatrix();
-	  glTranslatef(-w+.5f,h,f+r-h-1);
-	  glRotatef(180,0,1,0);
-	  drawWheel(h,1);
-  glPopMatrix();
-
-  // Draw the body of the car
-  glColor3fv(&color.r);
-  drawBody(d);
+	// Draw the body of the car
+	glColor3fv(&color.r);
+	drawBody(d);
 }
 
   
@@ -196,7 +193,7 @@ void Car::drawAfter(DrawingState* s)
 	glRotated(90,1,0,0);
 	drawBeam();
 	glPopMatrix();
-		// Beam 2
+	// Beam 2
 	glPushMatrix();			
 	glTranslatef(w*.7f,h+m/2,2);
 	glRotated(90,1,0,0);
@@ -223,20 +220,20 @@ void Car::drawBody(DrawingState*)
     // TODO2: To make the cars look more realistic and add texutres. 
 	// lamp
 
-	fetchTexture("car_eye.jpg");
+	fetchTexture("car_eye.bmp");
 	polygon(-4, -w, h, 0., -w, h + m - a, 0., w, h + m - a, 0., w, h, 0.);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	fetchTexture("car_hood_1.jpg");
+	fetchTexture("car_hood_1.bmp");
 	// hood
 	polygon(-4, -w, h + m - a, 0., -w, h + m, f, w, h + m, f, w, h + m - a, 0.);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	fetchTexture("car_side_3.jpg");
+	//fetchTexture("car_side_3.jpg");
 	//fenders
 	polygon(-4, -w, h, 0., -w, h, f, -w, h + m, f, -w, h + m - a, 0.); 
 	polygon(4, w, h, 0., w, h, f, w, h + m, f, w, h + m - a, 0.);
 
 	// top
-	fetchTexture("car_top_1.jpg");
+	fetchTexture("car_top_1.bmp");
 	polygon(-4, -w + sr, t + h, f, -w + sr, t + h, f + r - br, w - sr, t + h, f + r - br, w - sr, t + h, f);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	if (!sideTexture)
@@ -253,7 +250,7 @@ void Car::drawBody(DrawingState*)
 	// left side (x-), right side (x+), tops
 	
 	glBindTexture(GL_TEXTURE_2D, 0);
-	fetchTexture("car_side_2.jpg");
+	fetchTexture("car_side_2.bmp");
 	polygon(-4, -w, h, f, -w, h, f + r, -w, m + h, f + r, -w, m + h, f);
 	polygon(4, w, h, f, w, h, f + r, w, m + h, f + r, w, m + h, f);
 
@@ -261,8 +258,8 @@ void Car::drawBody(DrawingState*)
 	
 	if (!frontTexture)
 	{
-		//frontTexture = fetchTexture("suv-front.png"); // fetch does the bind
-		frontTexture = fetchTexture("windshield_full.jpg");
+		frontTexture = fetchTexture("suv-front.png"); // fetch does the bind
+		//frontTexture = fetchTexture("windshield_full.jpg");
 		
 	}
 	else frontTexture->bind();
@@ -276,14 +273,14 @@ void Car::drawBody(DrawingState*)
 	}
 	else backTexture->bind();
 	*/
-	fetchTexture("car_back_1.jpg");
+	fetchTexture("suv-front.png");
 	//fetchTexture("windshield_full.jpg");
 	polygon(4, -w, h + m, f + r, -w + sr, t + h, f + r - br, w - sr, t + h, f + r - br, w, h + m, f + r);
 	// remember to unbind the texture so that we don't keep using it
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	// rear
-	fetchTexture("car_rear_1.jpg");
+	fetchTexture("car_rear_1.bmp");
 	polygon(4, -w, h, f + r, -w, h + m, f + r, w, h + m, f + r, w, h, f + r);
 	glBindTexture(GL_TEXTURE_2D, 0);
 

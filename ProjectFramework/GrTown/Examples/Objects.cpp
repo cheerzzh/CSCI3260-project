@@ -506,7 +506,7 @@ void Sky::attachTexture(int currentTime)
 	char* skyTextureDay = "sky_day_0.png";
 	//char* skyTextureDay = "sky_day_3.jpg";
 	char* skyTexureNight = "sky_night_0.png";
-	char* skyTexureDusk = "sky_dwan_2.jpg";
+	char* skyTexureDusk = "sky_dawn_1.jpg";
 
 	// load 
 	if (!dayTexture)
