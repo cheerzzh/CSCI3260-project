@@ -634,10 +634,12 @@ void Sky::draw(DrawingState * d)
 
 /***********************************************************************/
 //hot air balloon
-HotAirBalloon::HotAirBalloon() : GrObject("Balloon")
+HotAirBalloon::HotAirBalloon(float r1, float g1, float b1, float r2, float g2, float b2) : GrObject("Balloon")
 {	
 	ridable = 1;
 	rideAbove = 60;
+	stripColor1(r1,g1,b1);
+	stripColor2(r2, g2, b2);
 }
 
 void HotAirBalloon::draw(DrawingState*) {
@@ -653,7 +655,12 @@ void HotAirBalloon::draw(DrawingState*) {
 	for (int i = 0; i <	horizontalSliceCount; i++) {
 		double theta1 = 2 * pi / horizontalSliceCount*i;
 		double theta2 = 2 * pi / horizontalSliceCount*(i + 1);
-		if (i % 2 == 0) glColor3ub(255, 200, 14); else glColor3ub(153, 217, 234);
+		if (i % 2 == 0) {
+			glColor4fv(&stripColor1.r);
+		}
+		else {
+			glColor4fv(&stripColor2.r);
+		}
 		for (int j = 0; j < verticalSliceCount1; j++) {
 			double h = radius - verticalSliceHeight * j;
 			double layerRadius1 = sqrt(radius * radius - h * h);

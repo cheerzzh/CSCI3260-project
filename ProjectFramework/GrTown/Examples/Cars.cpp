@@ -19,12 +19,11 @@ struct CarColors {
 CarColors cc[] = {
 	{"red",220,30,30},
 	{"white",225,225,225},
-	{"black",50,50,70},
 	{"green",30,225,30},
 	{"blue",30,30,225},
 	{"yellow",225,225,30}
 };
-const int nCarCols = 6;
+const int nCarCols = 5;
 
 ///////////////////////////////////////////////////////
 // the generic car...

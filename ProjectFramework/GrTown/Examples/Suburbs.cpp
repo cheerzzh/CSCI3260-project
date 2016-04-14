@@ -346,10 +346,10 @@ static void drawWoodFence(GLfloat width, GLfloat height, bool left, bool right) 
 
 void MultiTextureHouse::draw(DrawingState*)
 {
-	GLint hallHalfWidth = 20, hallHeight = 25, length = 40, frontLen = 13, roofHeight = 16;
+	GLint hallHalfWidth = 20, hallHeight = 20, length = 40, frontLen = 13, roofHeight = 16;
 	
 	Texture* wallTex = fetchTexture("wood.bmp",true,true);
-	Texture* windowTex = fetchTexture("house1-front.bmp");
+	Texture* windowTex = fetchTexture("woodhouse-front.bmp");
 	glActiveTextureARB(GL_TEXTURE0_ARB);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, wallTex->texName);
@@ -368,12 +368,12 @@ void MultiTextureHouse::draw(DrawingState*)
 		//front
 		glNormal3f(0, 0, 1);
 		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0); glVertex3i(hallHalfWidth, 0, 0);
-		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0.5); glVertex3i(hallHalfWidth, hallHeight, 0);
-		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0.5); glVertex3i(-hallHalfWidth, hallHeight, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 1); glVertex3i(hallHalfWidth, hallHeight, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 1); glVertex3i(-hallHalfWidth, hallHeight, 0);
 		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0); glVertex3i(-hallHalfWidth, 0, 0);
 	glEnd();
 
-	windowTex = fetchTexture("house1-side.bmp");
+	windowTex = fetchTexture("woodhouse-side.bmp");
 	glActiveTextureARB(GL_TEXTURE1_ARB);
 	glEnable(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, windowTex->texName);
@@ -383,19 +383,19 @@ void MultiTextureHouse::draw(DrawingState*)
 		glNormal3f(1, 0, 0);
 		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0); glVertex3i(hallHalfWidth, 0, 0);
 		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0); glVertex3i(hallHalfWidth, 0, -length);
-		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0.5); glVertex3i(hallHalfWidth, hallHeight, -length);
-		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0.5); glVertex3i(hallHalfWidth, hallHeight, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 1); glVertex3i(hallHalfWidth, hallHeight, -length);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 1); glVertex3i(hallHalfWidth, hallHeight, 0);
 		//back
 		glNormal3f(0, 0, -1);
 		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0); glVertex3i(hallHalfWidth, 0, -length);
 		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0); glVertex3i(-hallHalfWidth, 0, -length);
-		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0.5); glVertex3i(-hallHalfWidth, hallHeight, -length);
-		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0.5); glVertex3i(hallHalfWidth, hallHeight, -length);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 1); glVertex3i(-hallHalfWidth, hallHeight, -length);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 1); glVertex3i(hallHalfWidth, hallHeight, -length);
 		//left
 		glNormal3f(-1, 0, 0);
 		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0);  glVertex3i(-hallHalfWidth, 0, 0);
-		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 0.5); glVertex3i(-hallHalfWidth, hallHeight, 0);
-		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0.5); glVertex3i(-hallHalfWidth, hallHeight, -length);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 2, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 1, 1); glVertex3i(-hallHalfWidth, hallHeight, 0);
+		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 3);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 1); glVertex3i(-hallHalfWidth, hallHeight, -length);
 		glMultiTexCoord2fARB(GL_TEXTURE0, 0, 0);  glMultiTexCoord2fARB(GL_TEXTURE1, 0, 0); glVertex3i(-hallHalfWidth, 0, -length);
 	glEnd();
 	glActiveTexture(GL_TEXTURE0);
@@ -407,12 +407,12 @@ void MultiTextureHouse::draw(DrawingState*)
 		//front top
 		glNormal3f(0, 0, 1);
 		glTexCoord2f( 2, 0);  glVertex3i(hallHalfWidth, hallHeight, 0);
-		glTexCoord2f(1, 3); glVertex3i(0, hallHeight + roofHeight, 0);
+		glTexCoord2f(1, 2); glVertex3i(0, hallHeight + roofHeight, 0);
 		glTexCoord2f(0, 0); glVertex3i(-hallHalfWidth, hallHeight, 0);
 		//back top
 		glNormal3f(0, 0, -1);
 		glTexCoord2f(2, 0);  glVertex3i(-hallHalfWidth, hallHeight, -length);
-		glTexCoord2f(1, 3); glVertex3i(0, hallHeight + roofHeight, -length);
+		glTexCoord2f(1, 2); glVertex3i(0, hallHeight + roofHeight, -length);
 		glTexCoord2f(0, 0); glVertex3i(hallHalfWidth, hallHeight, -length);
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -451,16 +451,20 @@ void MultiTextureHouse::draw(DrawingState*)
 	glPopMatrix();
 
 	////roof
+	fetchTexture("roof2.bmp");
+	glColor3ub(255, 255, 255);
 	//layer 1
 	glTranslatef(0, hallHeight-1, 0);
-	polygoni(-4, -hallHalfWidth, 0, -length, -hallHalfWidth, 0, frontLen, 0, roofHeight, frontLen, 0, roofHeight, -length);
-	polygoni(-4, hallHalfWidth, 0, frontLen, hallHalfWidth, 0, -length, 0, roofHeight, -length, 0, roofHeight, frontLen);
+	polygoni(4, -hallHalfWidth, 0, -length, -hallHalfWidth, 0, frontLen, 0, roofHeight, frontLen, 0, roofHeight, -length);
+	polygoni(4, hallHalfWidth, 0, frontLen, hallHalfWidth, 0, -length, 0, roofHeight, -length, 0, roofHeight, frontLen);
 	//layer 2
 	glTranslatef(0, 2, 0);
 	polygoni(-4, -hallHalfWidth, 0, -length, -hallHalfWidth, 0, frontLen, 0, roofHeight, frontLen, 0, roofHeight, -length);
 	polygoni(-4, hallHalfWidth, 0, frontLen, hallHalfWidth, 0, -length, 0, roofHeight, -length, 0, roofHeight, frontLen);
+	glBindTexture(GL_TEXTURE_2D, 0);
 	glTranslatef(0, -2, 0);
 	//connection
+	glColor3ub(234, 166, 100);
 	polygoni(-4, -hallHalfWidth, 0, frontLen, 0, roofHeight, frontLen, 0, roofHeight + 2, frontLen, -hallHalfWidth, 2, frontLen);
 	polygoni(-4, 0, roofHeight, frontLen, hallHalfWidth, 0, frontLen, hallHalfWidth, 2, frontLen, 0, 2 + roofHeight, frontLen);
 	polygoni(-4, -hallHalfWidth, 0, -length, -hallHalfWidth, 0, frontLen, -hallHalfWidth, 2, frontLen, -hallHalfWidth, 2, -length);

@@ -66,7 +66,7 @@ int main(int /*argc*/, char** /*argv*/)
   church2->name = "Alexander Nevsky Church";
   church2->laX = 0; church2->laY = 0; church2->laZ = 0;
   church2->lfX = 0; church2->lfY = 100; church2->lfZ = 250;
-  add(church2, -50, 0, 200, pi / 2.f);
+  add(church2, -50, 0, 230, pi / 2.f);
 
   GrObject* gate = new CityGate;
   gate->interesting = true;
@@ -80,7 +80,7 @@ int main(int /*argc*/, char** /*argv*/)
   tvtower->interesting = true;
   tvtower->laX = 0; tvtower->laY = 80; tvtower->laZ = 0;
   tvtower->lfX = -50; tvtower->lfY = 150; tvtower->lfZ = 300;
-  add(tvtower, -100, 0, 300, pi / 2.f);
+  add(tvtower, -80, 0, 800, pi / 2.f);
 
   GrObject* market = new IndoorMarket;
   market->name = "Central Market";
@@ -94,45 +94,32 @@ int main(int /*argc*/, char** /*argv*/)
   townhall->interesting = true;
   townhall->laX = 0; townhall->laY = 0; townhall->laZ = 0;
   townhall->lfX = 0; townhall->lfY = 100; townhall->lfZ = 300;
-  add(townhall, -50, 0, 620, pi / 2.f);
+  add(townhall, -50, 0, 690, pi / 2.f);
 
   GrObject* woodhouse = new MultiTextureHouse;
   woodhouse->name = "Sauna House";
   woodhouse->interesting = true;
   woodhouse->laX = 0; woodhouse->laY = 0; woodhouse->laZ = 0;
   woodhouse->lfX = -80; woodhouse->lfY = 100; woodhouse->lfZ = 300;
-  add(woodhouse, -60, 0, 890, pi / 2.f);
+  add(woodhouse, -60, 0, 920, pi / 2.f);
 
-  GrObject* balloon1 = new HotAirBalloon;
+  GrObject* balloon1 = new HotAirBalloon(255, 200, 14, 0, 160, 233);
   balloon1->name = "Balloon-1";
   add(balloon1, 200, 60, 100, 0);
   new RandomFloat(balloon1, 30);
 
-  GrObject* balloon2 = new HotAirBalloon;
+  GrObject* balloon2 = new HotAirBalloon(228, 0, 127, 255, 255, 255);
   balloon2->name = "Balloon-2";
-  add(balloon2, 600, 60, 50, 0);
+  add(balloon2, 600, 80, 50, 0);
   new RandomFloat(balloon2, 30);
 
-  GrObject* balloon3 = new HotAirBalloon;
+  GrObject* balloon3 = new HotAirBalloon(146, 7, 131,255,255,255);
   balloon3->name = "Balloon-3";
-  add(balloon3, 200, 60, 500, 0);
+  add(balloon3, 200, 70, 500, 0);
   new RandomFloat(balloon3, 30);
 
   // *****************************************************************
   //  Make your town here
-
-  // add snowman 
-  /*
-  GrObject* snowman1 = new SnowMan(-100, 0, -50, 30);
-  add(snowman1);
-  snowman1->name = "snowman1";
-  // make it an interesting object (so its easy to look at)
-  // and give a place to look at it from
-  // this is a good object to look at since it won't move //bookmark
-  snowman1->interesting = true;
-  snowman1->laX = 0; snowman1->laY = 0; snowman1->laZ = 0;
-  snowman1->lfX = 70; snowman1->lfY = 50; snowman1->lfZ = 0;
-  */
   // first, some really simple things
 
   // cubes are particularly easy since they set their own position
@@ -167,11 +154,11 @@ int main(int /*argc*/, char** /*argv*/)
   
   // add fountain
   GrObject* f1 = new Fountain;
-  f1->name = "Fountain1";
+  f1->name = "Fountain";
   f1->interesting = true;
   f1->laX = 0; f1->laY = 0; f1->laZ = 0;
-  f1->lfX = 70; f1->lfY = 50; f1->lfZ = 0;
-  add(f1, -100, 0, -150);
+  f1->lfX = 70; f1->lfY = 100; f1->lfZ = 300;
+  add(f1, -60, 0, 300);
 
   // add firework
   GrObject* fw;
