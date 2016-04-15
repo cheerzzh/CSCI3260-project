@@ -189,7 +189,7 @@ void Fireworks::gen_particles() {
 	if (evl > 0) last_gen_clock = c;
 	for (; evl > 0 && gen_evl > 0; evl--, gen_evl--) {
 		for (int gen = 0; gen < gen_rate && particles.size() < max_particles; gen++) {
-			particles.push_back(Particle(life, rand_fire_speed(), color, glm::vec3(0.0, 0.0, 0.0), 0.05f, (float)rand() / RAND_MAX * 0.2 + 0.2, (float)rand() / RAND_MAX * 360));
+			particles.push_back(Particle(life, rand_fire_speed(), color, glm::vec3(0.0, 0.0, 0.0), 0.05f, (float)rand() / RAND_MAX * 0.3 + 0.3, (float)rand() / RAND_MAX * 360));
 		}
 	}
 }
@@ -244,11 +244,15 @@ void Fireworks::evolute() {
 			
 
 	
-			it->color.a *= 0.99; 
-			//it->color.r *= 0.98;
+			it->color.a *= 0.98; 
 		}
 		last_evl_clock = c;
 	}
+}
+
+Color getRandomColor()
+{
+	return Color((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX);
 }
 
 void Fireworks::draw(DrawingState *d) {
@@ -257,6 +261,10 @@ void Fireworks::draw(DrawingState *d) {
 		gen_evl = 3;
 		start = false;
 		this->color1_has_reach = false;
+		// generate new color
+		this->color = getRandomColor();
+		this->end_color = getRandomColor();
+		this->end_color_2 = getRandomColor();
 	}
 	this->gen_particles();
 	

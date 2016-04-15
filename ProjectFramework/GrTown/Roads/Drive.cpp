@@ -21,6 +21,11 @@ Drive::Drive(GrObject* car, Road* road_, float u_, int lane_) :
   Behavior(car),
   road(road_), u(u_), lane(lane_), speed(.25), lastRoad(0)
 {
+	time_accumator = 0;
+	isInAccelaration = true;
+	a = 0.008;
+	min_speed = 0.01;
+	max_speed = 0.8;
 }
 
 // put the car in the right place
@@ -42,6 +47,12 @@ void Drive::setMatrix()
   owner->transform[0][2] = dx;
 }
 
+bool float_equal(float f1, float f2){
+	if (abs(f2 - f1) < 0.0000001){
+		return true;
+	}
+	return false;
+}
 // we fake arc length correction by seeing how fast we go
 unsigned long Drive::advanceU(unsigned long time)
 {
@@ -59,8 +70,34 @@ unsigned long Drive::advanceU(unsigned long time)
 
 		// figure out how long the step is
 		dur = static_cast<float>(time-lastV);
-
+		// add dur to accumulater, which perform as a counter to re-select the status:add speed or reduce speed
+		this->time_accumator += dur;
+		if (this->time_accumator >= (8000 + rand()%3000)){
+			/*
+			if (float_equal(this->speed, 0.25)){
+				this->speed = 0.01;
+			}
+			else{
+				this->speed = 0.25;
+			}
+			*/
+			this->isInAccelaration = !isInAccelaration;
+			this->time_accumator = 0; // reset
+		}
+		// change speed
+		if (isInAccelaration){
+			this->speed = min(max_speed, this->speed + a);
+		}
+		else
+		{
+			this->speed = max(min_speed, this->speed - a);
+		}
 		// how far should we go in that amount of time
+
+
+		// randomly choose to accelarate or decelarate for a random period
+		// min -> max -> min
+		//this->speed = 0.4;
 		float dist = dur * speed;
 
 

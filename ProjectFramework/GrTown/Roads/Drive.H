@@ -30,12 +30,16 @@ public:
   Road* road;
   float u;
   int lane;
-
+  unsigned long time_accumator;
   // put the car in the right position
   void setMatrix();
 
   // have a speed that we try to achieve (roughly units/timestep)
   float speed;
+  bool	isInAccelaration;
+  float a;
+  float min_speed;
+  float max_speed;
 
   // advance u to try to simulate driving at a speed for an amount
   // of time - give it the ending time (like simulate until)
@@ -67,7 +71,7 @@ class RandomDrive : public Drive
 {
 public:
   RandomDrive(GrObject* car, Road* road, float u, int lane, int prefer=0);
-
+  //float max_speed, min_speed;
   virtual void simulateUntil(unsigned long time);
 
   int prefer;	// is there a preferred direction to turn?

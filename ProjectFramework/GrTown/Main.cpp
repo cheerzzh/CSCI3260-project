@@ -125,6 +125,7 @@ int main(int /*argc*/, char** /*argv*/)
   // cubes are particularly easy since they set their own position
   // we need to raise the cube since we're giving the position of the
   // center 
+  /*
   GrObject* cube1 = new ShadedCube(-50,5,-50,10,   .7f, .6f, .3f);
   add(cube1);
   cube1->name = "Cube1";
@@ -151,7 +152,8 @@ int main(int /*argc*/, char** /*argv*/)
   // test car
   Car* c1 = new HatchBack(1);
   cube4->add(c1);
-  
+  */
+
   // add fountain
   GrObject* f1 = new Fountain;
   f1->name = "Fountain";
@@ -162,22 +164,13 @@ int main(int /*argc*/, char** /*argv*/)
 
   // add firework
   GrObject* fw;
- 
-  Color colors[] = { Color(1.0, 0.0, 0.0), Color(0.0, 1.0, 0.0), Color(0.0, 1.0, 1.0), Color(1.0, 1.0, 0.0), Color(1.0, 0.0, 1.0) };
-  /*
   for (int i = 0; i < 5; i++) {
-	  fw = new Fireworks(colors[rand() % (sizeof(colors) / sizeof(Color))]);
+	  fw = new Fireworks(Color((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX), Color((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX), Color((float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX));
 	  fw->interesting = false;
 	  add(fw, rand() % 2000, rand() % 100 + 100, rand() % 1000);
-	  new emitFireWork(fw, rand() % 5000);
+	  new emitFireWork(fw, rand() % 3000);
   }
-  */
-
-  fw = new Fireworks(Color(0.0, 1.0, 0.0), Color(1.0f, 0.0f, 0.0f), Color(1.0f, 0.0f, 1.0f));
-  fw->interesting = false;
-  add(fw,-100, 200, -200);
-  new emitFireWork(fw, 3000);
-
+  
   GrObject* snow = new Snow(Color(1.0, 1.0, 1.0),600); // color, width of snowing area
   add(snow, -100, 250, -100);
   snow->interesting = true;
