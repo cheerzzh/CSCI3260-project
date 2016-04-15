@@ -358,7 +358,7 @@ void Snow::evolute() {
 }
 
 void Snow::draw(DrawingState *d) {
-	if ((d->timeOfDay < 4 || d->timeOfDay > 20)) return;
+	if ((d->timeOfDay <= 4 || d->timeOfDay >= 20)) return;
 	this->gen_particles();
 	this->evolute();
 	for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
