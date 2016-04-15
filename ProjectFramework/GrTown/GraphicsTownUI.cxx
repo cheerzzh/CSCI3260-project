@@ -68,7 +68,7 @@ Fl_Double_Window* GraphicsTownUI::make_window() {
       }
       { Fl_Button* o = cull = new Fl_Button(770, 580, 75, 25, "Backface Cull");
         o->type(1);
-        o->value(1);
+        o->value(0);
         o->selection_color(11);
         o->labelsize(12);
       }

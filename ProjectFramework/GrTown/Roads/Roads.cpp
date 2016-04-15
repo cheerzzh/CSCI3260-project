@@ -42,7 +42,6 @@ void Road::draw(DrawingState*)
   glPolygonOffset(-1.,-2.);
   glColor3f(.6f,.6f,.6f);
   glNormal3f(0,1,0);
-  //fetchTexture("asphalt.png",true,true);
   fetchTexture("road2.jpg", true, true);
   roadDraw();
   glDisable(GL_POLYGON_OFFSET_FILL);
@@ -107,8 +106,6 @@ void RoundRoad::draw(DrawingState*)
 	glColor3f(1.0f, 1.0f, 1.0f);
 	glNormal3f(0, 1, 0);
 	fetchTexture("road1.jpg", true, true);
-	//fetchTexture("road_damaged.jpg");
-	//fetchTexture("asphalt.png", true, true);
 	roadDraw();
 	glDisable(GL_POLYGON_OFFSET_FILL);
 
@@ -240,8 +237,6 @@ void Intersection::draw(DrawingState*)
 	glColor3f(.7f, .7f, .7f);
 	glNormal3f(0, 1, 0);
 	fetchTexture("crossing.jpg", true, true);
-	//fetchTexture("road_damaged.jpg");
-	//fetchTexture("asphalt.png", true, true);
 	roadDraw();
 	glDisable(GL_POLYGON_OFFSET_FILL);
 
@@ -253,7 +248,6 @@ void Intersection::roadDraw()
   glPushMatrix();
   glTranslatef(ax,0,az);
   glBegin(GL_POLYGON);
-  //fetchTexture("road1.jpg", true, true);
   glTexCoord2f(0, 0);
   glVertex3f(-roadWidth,0, roadWidth);
   glTexCoord2f(0, 1);

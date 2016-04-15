@@ -31,8 +31,6 @@ public:
 };
 
 // three very basic houses.
-// only thing that makes them at all interesting is that they have
-// windows slapped onto them using texture
 class SimpleHouse1 : public GrObject {
 public:
   SimpleHouse1();
