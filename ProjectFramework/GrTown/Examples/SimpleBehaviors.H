@@ -50,11 +50,14 @@ public:
 	virtual void simulateUntil(unsigned long);
 };
 
+// random float
 class RandomFloat :public Behavior{
 public:
 	RandomFloat(GrObject* owner,int vel = 10);
 	int vel;
-	int dx, dz;
+	int dx, dz;  //control the direction of movement in x-z plane
+	int vx, vz; //velocity in x, z, ensure constant speed in each 'section'
+	unsigned long sectionStartTime;	
 	virtual void simulateUntil(unsigned long);
 };
 

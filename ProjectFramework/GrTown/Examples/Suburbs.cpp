@@ -346,7 +346,7 @@ static void drawWoodFence(GLfloat width, GLfloat height, bool left, bool right) 
 
 void MultiTextureHouse::draw(DrawingState*)
 {
-	GLint hallHalfWidth = 20, hallHeight = 20, length = 40, frontLen = 13, roofHeight = 16;
+	GLint hallHalfWidth = 20, hallHeight = 20, length = 40, frontLen = 14, roofHeight = 16;
 	
 	Texture* wallTex = fetchTexture("wood.bmp",true,true);
 	Texture* windowTex = fetchTexture("woodhouse-front.bmp");
@@ -471,9 +471,7 @@ void MultiTextureHouse::draw(DrawingState*)
 	polygoni(-4, hallHalfWidth, 0, frontLen, hallHalfWidth, 0, -length, hallHalfWidth, 2, -length, hallHalfWidth, 2, frontLen);
 	polygoni(4, -hallHalfWidth, 0, -length, 0, roofHeight, -length, 0, roofHeight + 2, -length, -hallHalfWidth, 2, -length);
 	polygoni(4, 0, roofHeight, -length, hallHalfWidth, 0, -length, hallHalfWidth, 2, -length, 0, 2 + roofHeight, -length);
-	
 }
-
 
 /***********************************************************************/
 //town hall
