@@ -12,72 +12,76 @@
 
 #include "Utilities/ShaderTools.H"
 
-Particle::Particle(float _life, const glm::vec3 &_speed, Color &_color, const glm::vec3 &_pos,
-	float _weight, float _size, float _angle)
-	: life(_life), speed(_speed), color(_color), pos(_pos), weight(_weight), size(_size), angle(_angle) {
+Particle::Particle(float _life, const glm::vec3 &_speed, Color &_color, const glm::vec3 &_pos,float _weight, float _size, float _angle) {
+	this->life = _life;
+	this->speed = _speed;
+	this->color = _color;
+	this->pos = _pos;
+	this->weight = _weight;
+	this->size = _size;
+	this->angle = _angle;
 	this->birth = clock();
 }
 
 void Particle::draw(DrawingState*) {
-	glEnable(GL_BLEND);
+	glPushMatrix();glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
-	glPushMatrix();
-	glColor4f(color.r, color.g, color.b, color.a);
-	glRotatef(angle, 0, 1, 0);
 	glScalef(size, size, size);
+	glRotatef(angle, 0, 1, 0);
+	glColor4f(color.r, color.g, color.b, color.a);
 	glTranslatef(pos[0] / size, pos[1] / size, pos[2] / size);
 	glutSolidSphere(1.0, 5, 5); // a particle instance
-	glPopMatrix();
-	glDisable(GL_BLEND);
+	glDisable(GL_BLEND); glPopMatrix();
 }
 
 glm::vec3 rand_water_speed(float direction,float height) {
-	glm::vec3 v(0.0f, 1.0f, 0.0f);
+	glm::vec3 v(0.0f, 1.0f, 0.0f); // inital value
 	v = glm::rotate(v, ((float)rand() / RAND_MAX * 10 + 10) * direction, glm::vec3(1.0f, 0.0f, 0.0f));
 	v = glm::rotate(v, (float)rand() / RAND_MAX * 360, glm::vec3(0.0f, 1.0f, 0.0f));
 	//v = glm::translate(v, glm::vec3(0.0f,1.0f,0.0f));
-	v *= glm::vec3(1.f, height, 1.f);
+	v *= glm::vec3(1.f, height, 1.f); // adjust initial up speed
 	return v;
 }
 
 Fountain::Fountain() : GrObject("Fountain") {
+	max_particle_number = 25000;
+	life = 4;
+	evolution_rate = 30;
+	generate_rate = 130;
+	// set color
 	color(.4f, 0.698f, 1.0f, 1.0f);
 	color_layer2(1.f, 0.398f, 0.f, 1.0f);
-	max_particles = 25000;
-	gen_rate = 130;
-	life = 4;
-	evl_rate = 30;
+	
 	g = glm::vec3(0.0f, -1.0f, 0.0f);
 	g2 = glm::vec3(0.0f, -0.5f, 0.0f);
-	last_gen_clock = last_evl_clock = clock();
+	last_evolution_timer = clock();
+	last_generate_timer = last_evolution_timer;
 }
 
-void Fountain::gen_particles() {
-	clock_t c = clock();
+void Fountain::generate() {
+	clock_t currentTime = clock();
 	// end life of old particles
-	while (!particles.empty() && particles.front().birth + particles.front().life * CLOCKS_PER_SEC <= c) {
+	while (!particles.empty() && particles.front().birth + particles.front().life * CLOCKS_PER_SEC <= currentTime) {
 		particles.pop_front();
 	}
 
-	while (!particles_layer2.empty() && particles_layer2.front().birth + particles_layer2.front().life * CLOCKS_PER_SEC <= c) {
+	while (!particles_layer2.empty() && particles_layer2.front().birth + particles_layer2.front().life * CLOCKS_PER_SEC <= currentTime) {
 		particles_layer2.pop_front();
 	}
-	double t = (double)(c - last_gen_clock) / CLOCKS_PER_SEC;
-	for (int gen = (int)(t * gen_rate); gen > 0 && particles.size() < max_particles; gen--) {
+	double t = (double)(currentTime - last_generate_timer) / CLOCKS_PER_SEC;
+	for (int gen = (int)(t * generate_rate); gen > 0 && particles.size() < max_particle_number; gen--) {
 		particles.push_back(Particle(life, rand_water_speed(1.5,1.1), color, glm::vec3(0.0, 0.0, 0.0), 1.0f, (float)rand() / RAND_MAX * 0.15 + 0.1, (float)rand() / RAND_MAX * 360));
-		last_gen_clock = c;
+		last_generate_timer = currentTime;
 	}
 
-	for (int gen = (int)(t * gen_rate); gen > 0 && particles_layer2.size() < max_particles; gen--) {
+	for (int gen = (int)(t * generate_rate); gen > 0 && particles_layer2.size() < max_particle_number; gen--) {
 		particles_layer2.push_back(Particle(life, rand_water_speed(0.3,1.5), color, glm::vec3(0.0, 0.0, 0.0), 1.0f, (float)rand() / RAND_MAX * 0.15 + 0.1, (float)rand() / RAND_MAX * 360));
-		last_gen_clock = c;
+		last_generate_timer = currentTime;
 	}
-}
 
-void Fountain::evolute() {
-	clock_t c = clock();
-	double t = (double)(c - last_evl_clock) / CLOCKS_PER_SEC;
-	for (int evl = (int)(t * evl_rate); evl > 0; evl--) {
+	currentTime = clock();
+	t = (double)(currentTime - last_evolution_timer) / CLOCKS_PER_SEC;
+	for (int evl = (int)(t * evolution_rate); evl > 0; evl--) {
 		for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) { // for each generated particle
 			it->pos += it->speed;
 			glm::vec3 a = it->weight * g;
@@ -85,7 +89,6 @@ void Fountain::evolute() {
 			it->speed += a;
 			it->color.a *= 0.98;
 		}
-
 		for (std::deque<Particle>::iterator it = particles_layer2.begin(); it != particles_layer2.end(); it++) { // for each generated particle
 			it->pos += it->speed;
 			glm::vec3 a = it->weight * g;
@@ -94,7 +97,7 @@ void Fountain::evolute() {
 			it->color.a *= 0.98;
 		}
 
-		last_evl_clock = c;
+		last_evolution_timer = currentTime;
 	}
 }
 
@@ -140,15 +143,14 @@ void Fountain::draw(DrawingState *d) {
 		glTranslatef(0, 0, 0.5);
 		gluDisk(obj, baseRadius2 - 1, baseRadius2, 30, 10);
 	glPopMatrix();
+
 	////fountain
 	glTranslatef(0, 15, 0);
-	this->gen_particles();
-	this->evolute();
+	this->generate();
 	// draw for each particles 
 	for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
 		it->draw(d);
 	}
-
 	for (std::deque<Particle>::iterator it = particles_layer2.begin(); it != particles_layer2.end(); it++) {
 		it->draw(d);
 	}
@@ -164,37 +166,28 @@ glm::vec3 rand_fire_speed() {
 }
 
 Fireworks::Fireworks(Color _color1, Color _color2, Color _color3) : GrObject("Fireworks"), color(_color1),end_color(_color2),end_color_2(_color3) {
-	color.a = 1.0f;
-	//end_color = Color(1.0f, 0.0f, 0.0f);
-	//end_color_2 = Color(0.0f, 0.0f, 1.0f);
-	max_particles = 10000;
-	gen_rate = 100;
+	max_particle_number = 10000;
+	generate_rate = 100;
 	life = 5;
-	evl_rate = 30;
+	evolution_rate = 30;
 	gen_evl = 0;
 	g = glm::vec3(0.0f, -1.0f, 0.0f);
+
+	color.a = 1.0f;
+	end_color.a = 1.0f;
+	end_color_2.a = 1.0f;
+	//end_color = Color(1.0f, 0.0f, 0.0f);
+	//end_color_2 = Color(0.0f, 0.0f, 1.0f);
+
 	start = false;
 	color1_has_reach = false;
 	color2_has_reach = false;
-	last_gen_clock = last_evl_clock = clock();
+
+	last_evolution_timer = clock();
+	last_generate_timer = last_evolution_timer;
 }
 
-void Fireworks::gen_particles() {
-	clock_t c = clock();
-	while (!particles.empty() && particles.front().birth + particles.front().life * CLOCKS_PER_SEC <= c) {
-		particles.pop_front();
-	}
-	double t = (double)(c - last_gen_clock) / CLOCKS_PER_SEC;
-	int evl = (int)(t * evl_rate);
-	if (evl > 0) last_gen_clock = c;
-	for (; evl > 0 && gen_evl > 0; evl--, gen_evl--) {
-		for (int gen = 0; gen < gen_rate && particles.size() < max_particles; gen++) {
-			particles.push_back(Particle(life, rand_fire_speed(), color, glm::vec3(0.0, 0.0, 0.0), 0.05f, (float)rand() / RAND_MAX * 0.3 + 0.3, (float)rand() / RAND_MAX * 360));
-		}
-	}
-}
-
-bool colors_are_similar(Color c1, Color c2,float tolerance){
+bool colors_are_similar(Color c1, Color c2, float tolerance){
 	// if the difference of r,g,b component is within tolerance
 	if ((abs(c1.r - c2.r) <= tolerance) && (abs(c1.g - c2.g) <= tolerance) && (abs(c1.b - c2.b) <= tolerance)){
 		return true;
@@ -202,13 +195,26 @@ bool colors_are_similar(Color c1, Color c2,float tolerance){
 	return false;
 }
 
-void Fireworks::evolute() {
-	clock_t c = clock();
-	double t = (double)(c - last_evl_clock) / CLOCKS_PER_SEC;
-	for (int evl = (int)(t * evl_rate); evl > 0; evl--) {
+void Fireworks::generate() {
+	clock_t currentTime = clock();
+	while (!particles.empty() && particles.front().birth + particles.front().life * CLOCKS_PER_SEC <= currentTime) {
+		particles.pop_front();
+	}
+	double t = (double)(currentTime - last_generate_timer) / CLOCKS_PER_SEC;
+	int evl = (int)(t * evolution_rate);
+	if (evl > 0) last_generate_timer = currentTime;
+	for (; evl > 0 && gen_evl > 0; evl--, gen_evl--) {
+		for (int gen = 0; gen < generate_rate && particles.size() < max_particle_number; gen++) {
+			particles.push_back(Particle(life, rand_fire_speed(), color, glm::vec3(0.0, 0.0, 0.0), 0.05f, (float)rand() / RAND_MAX * 0.3 + 0.3, (float)rand() / RAND_MAX * 360));
+		}
+	}
+
+	currentTime = clock();
+	t = (double)(currentTime - last_evolution_timer) / CLOCKS_PER_SEC;
+	for (int evl = (int)(t * evolution_rate); evl > 0; evl--) {
 		for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
 			it->pos += it->speed;
-			glm::vec3 a = it->weight * g; 
+			glm::vec3 a = it->weight * g;
 			a *= t;
 			it->speed += a;
 
@@ -222,7 +228,7 @@ void Fireworks::evolute() {
 			float b_diff_1 = end_color_2.b - end_color.b;
 
 			// update color if not reach target color 1
-			if(!colors_are_similar(it->color, end_color, 0.001)){
+			if (!colors_are_similar(it->color, end_color, 0.001)){
 				it->color.r += r_diff / 30;
 				it->color.g += g_diff / 30;
 				it->color.b += b_diff / 30;
@@ -232,23 +238,20 @@ void Fireworks::evolute() {
 				color1_has_reach = true;
 			}
 			// shift to color2
-			
+
 			if (color1_has_reach){
 				if (!colors_are_similar(it->color, end_color_2, 0.001)){
 					it->color.r += r_diff_1 / 15;
 					it->color.g += g_diff_1 / 15;
 					it->color.b += b_diff_1 / 15;
 				}
-
 			}
-			
-
-	
-			it->color.a *= 0.98; 
+			it->color.a *= 0.98;
 		}
-		last_evl_clock = c;
+		last_evolution_timer = currentTime;
 	}
 }
+
 
 Color getRandomColor()
 {
@@ -266,9 +269,7 @@ void Fireworks::draw(DrawingState *d) {
 		this->end_color = getRandomColor();
 		this->end_color_2 = getRandomColor();
 	}
-	this->gen_particles();
-	
-	this->evolute();
+	this->generate();
 	for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
 		it->draw(d);
 	}
@@ -294,73 +295,53 @@ glm::vec3 rand_snow_position(int width){
 }
 Snow::Snow(Color _color,int _width) : GrObject("Snow"), color(_color),width(_width) {
 	color.a = 1.0f;
-	max_particles = 5000;
-	gen_rate = 500;
+	max_particle_number = 5000;
+	generate_rate = 500;
 	life = 15;
-	evl_rate = 30;
+	evolution_rate = 30;
 	gen_evl = 0;
 	//width = 150;
 	//height = 100;
 	random_shift_intensity = 0.35;
 	g = glm::vec3(0.0f, -1.0f, 0.0f);
 	start = false;
-	last_gen_clock = last_evl_clock = clock();
+	last_evolution_timer = clock();
+	last_generate_timer = last_evolution_timer;
 }
 
-/*
-void Snow::gen_particles() {
-	clock_t c = clock();
-	while (!particles.empty() && particles.front().birth + particles.front().life * CLOCKS_PER_SEC <= c) {
-		particles.pop_front();
-	}
-	double t = (double)(c - last_gen_clock) / CLOCKS_PER_SEC;
-	int evl = (int)(t * evl_rate);
-	if (evl > 0) last_gen_clock = c;
-	for (; evl > 0 && gen_evl > 0; evl--, gen_evl--) {
-		for (int gen = 0; gen < gen_rate && particles.size() < max_particles; gen++) {
-			particles.push_back(Particle(life, rand_water_speed(1,1), color, glm::vec3(0.0, 0.0, 0.0), 1.0f, (float)rand() / RAND_MAX * 0.2 + 0.2, (float)rand() / RAND_MAX * 360));
-		}
-	}
-}
-*/
 
-void Snow::gen_particles() {
-	clock_t c = clock();
+void Snow::generate() {
+	clock_t currentTime = clock();
 	// end life of old particles
-	while (!particles.empty() && particles.front().birth + particles.front().life * CLOCKS_PER_SEC <= c) {
+	while (!particles.empty() && particles.front().birth + particles.front().life * CLOCKS_PER_SEC <= currentTime) {
 		particles.pop_front();
 	}
 
-	double t = (double)(c - last_gen_clock) / CLOCKS_PER_SEC;
-	for (int gen = (int)(t * gen_rate); gen > 0 && particles.size() < max_particles; gen--) {
+	double t = (double)(currentTime - last_generate_timer) / CLOCKS_PER_SEC;
+	for (int gen = (int)(t * generate_rate); gen > 0 && particles.size() < max_particle_number; gen--) {
 		particles.push_back(Particle(life, rand_snow_speed(1), color, rand_snow_position(this->width), 0.001f, (float)rand() / RAND_MAX * 0.15 + 0.12, (float)rand() / RAND_MAX * 360));
-		last_gen_clock = c;
+		last_generate_timer = currentTime;
 	}
-}
 
-
-void Snow::evolute() {
-	clock_t c = clock();
-	double t = (double)(c - last_evl_clock) / CLOCKS_PER_SEC;
-	for (int evl = (int)(t * evl_rate); evl > 0; evl--) {
+	currentTime = clock();
+	t = (double)(currentTime - last_evolution_timer) / CLOCKS_PER_SEC;
+	for (int evl = (int)(t * evolution_rate); evl > 0; evl--) {
 		for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
 			it->pos += it->speed;
 			glm::vec3 a = it->weight * g;
-			glm::vec3 random_v(((float)rand() / RAND_MAX -0.5)* random_shift_intensity, 0.0f, ((float)rand() / RAND_MAX -0.5)* random_shift_intensity); // add random shift
+			glm::vec3 random_v(((float)rand() / RAND_MAX - 0.5)* random_shift_intensity, 0.0f, ((float)rand() / RAND_MAX - 0.5)* random_shift_intensity); // add random shift
 			a += random_v;
 			a *= t;
 			it->speed += a;
-			//it->color.a *= 0.99;
-			//it->color.r *= 0.98;
 		}
-		last_evl_clock = c;
+		last_evolution_timer = currentTime;
 	}
 }
 
+
 void Snow::draw(DrawingState *d) {
 	if ((d->timeOfDay <= 4 || d->timeOfDay >= 20)) return;
-	this->gen_particles();
-	this->evolute();
+	this->generate();
 	for (std::deque<Particle>::iterator it = particles.begin(); it != particles.end(); it++) {
 		it->draw(d);
 	}
@@ -514,7 +495,6 @@ void Sky::draw(DrawingState * d)
 	attachTexture(d->timeOfDay);
 
 	glBegin(GL_QUADS);
-	//front
 	glNormal3f(0, 0, 1);
 	glTexCoord2f(.25,.75);
 	glVertex3f(-1, -1, -1);
@@ -525,9 +505,7 @@ void Sky::draw(DrawingState * d)
 	glTexCoord2f(.5, .75);
 	glVertex3f(-1,1,-1);
 
-	//right
 	glNormal3f(-1, 0, 0);
-	//glColor3f(0, 0, 1);
 	glTexCoord2f(.25,  .5);
 	glVertex3f(1, -1, -1);
 	glTexCoord2f(.25, .25);
@@ -537,9 +515,7 @@ void Sky::draw(DrawingState * d)
 	glTexCoord2f( .5,  .5);
 	glVertex3f(1, 1, -1);
 
-	//back
 	glNormal3f(0, 0, -1);
-	//glColor3f(0, 1, 0);
 	glTexCoord2f(.25,   0);
 	glVertex3f(-1, -1, 1);
 	glTexCoord2f( .5,   0);
@@ -549,9 +525,7 @@ void Sky::draw(DrawingState * d)
 	glTexCoord2f(.25, .25);
 	glVertex3f( 1, -1, 1);
 
-	//left
 	glNormal3f(1, 0, 0);
-	//glColor3f(0, 1, 1);
 	glTexCoord2f(.25, .75);
 	glVertex3f(-1, -1,  -1);
 	glTexCoord2f( .5, .75);
@@ -560,9 +534,8 @@ void Sky::draw(DrawingState * d)
 	glVertex3f(-1,  1,  1);
 	glTexCoord2f(.25, 1);
 	glVertex3f(-1, -1,  1);
-	//top
+
 	glNormal3f(0, -1, 0);
-	//glColor3f(1, 0, 0);
 	glTexCoord2f( .5, .75);
 	glVertex3f(-1.01, 0.99, -1.01);
 	glTexCoord2f( .5,  .5);
@@ -571,6 +544,7 @@ void Sky::draw(DrawingState * d)
 	glVertex3f(1.01, 0.99, 1.01);
 	glTexCoord2f(.75, .75);
 	glVertex3f(-1.01, 0.99, 1.01);
+	
 	glEnd();
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glPopMatrix();
