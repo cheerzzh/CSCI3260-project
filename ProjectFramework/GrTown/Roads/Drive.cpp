@@ -23,9 +23,9 @@ Drive::Drive(GrObject* car, Road* road_, float u_, int lane_) :
 {
 	time_accumator = 0;
 	isInAccelaration = true;
-	a = 0.008;
+	a = 0.01;
 	min_speed = 0.01;
-	max_speed = 0.8;
+	max_speed = 1;
 }
 
 // put the car in the right place
@@ -72,7 +72,7 @@ unsigned long Drive::advanceU(unsigned long time)
 		dur = static_cast<float>(time-lastV);
 		// add dur to accumulater, which perform as a counter to re-select the status:add speed or reduce speed
 		this->time_accumator += dur;
-		if (this->time_accumator >= (8000 + rand()%3000)){
+		if (this->time_accumator >= (13000 + rand()%3000)){
 			/*
 			if (float_equal(this->speed, 0.25)){
 				this->speed = 0.01;

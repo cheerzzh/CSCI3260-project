@@ -173,9 +173,9 @@ int main(int /*argc*/, char** /*argv*/)
   
   GrObject* snow = new Snow(Color(1.0, 1.0, 1.0),600); // color, width of snowing area
   add(snow, -100, 250, -100);
-  snow->interesting = true;
-  snow->laX = 0; f1->laY = 0; f1->laZ = 0;
-  snow->lfX = 70; f1->lfY = 50; f1->lfZ = 0;
+  //snow->interesting = true;
+  //snow->laX = 0; f1->laY = 0; f1->laZ = 0;
+  //snow->lfX = 70; f1->lfY = 50; f1->lfZ = 0;
 
     ////////////////////////////////////////////////////////////////////////
   // now to make a real town!
